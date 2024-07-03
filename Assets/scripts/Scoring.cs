@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Scoring : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Scoring : MonoBehaviour
     float trueDistance; // The precise distance travelled.
     int scoreDistance;  // The distance travelled rounded to an interval of the scoreInterval.
 
+    public static event Action<int> OnUpdatedScore;
+    
     void Update()
     {
         HandleDistanceTravelled();
@@ -34,6 +37,8 @@ public class Scoring : MonoBehaviour
         if (currentScoreDistance != trueDistance)
         {
             overlayCanvas.DrawDistanceScore(scoreDistance);
+            
+            OnUpdatedScore?.Invoke(scoreDistance);
         }
     }
 }

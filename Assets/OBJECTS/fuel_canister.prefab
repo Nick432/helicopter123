@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -4926200451710385826}
   - component: {fileID: -7064773249743766231}
   - component: {fileID: 9094005764747126637}
+  - component: {fileID: -190449863484649070}
   m_Layer: 0
   m_Name: fuel_canister
   m_TagString: fuel
@@ -144,9 +145,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7833f7d19453f94d91534f1686b00a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMoveSpeed: 5
-  moveSpeedVariance: 1
-  refillAmount: 8
+  overwriteGlobalMoveSpeed: 0
+  customMoveSpeed: 0
+  moveSpeedVariance: 0
 --- !u!114 &9094005764747126637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,3 +160,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 971a6bd48f07ade4fb0e1b683d107aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-190449863484649070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663437690140574226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1036818b796907d4c972655c933896c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contactDamage: 0.25
+  healInsteadOfDamage: 1
+  immunityTimeAfterContact: 0
+  destroyOnContact: 1
+  contactable: 1

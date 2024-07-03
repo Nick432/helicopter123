@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Helicopter : MonoBehaviour
+public class Snowball : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
 
@@ -13,20 +13,25 @@ public class Helicopter : MonoBehaviour
     [SerializeField] float rightMargin;
     [SerializeField] float topMargin;
     [SerializeField] float bottomMargin;
+    
+    [Header("Size")]
+    [SerializeField] float minScale;
+    [SerializeField] float maxScale;
+    [SerializeField] Transform scaleAnchor;
 
     Vector2 minBounds;
     Vector2 maxBounds;
 
-    [HideInInspector] public float fuel_level;
+    Vector2 moveDirection;
 
-    fuel_meter fuelMeter;
+    SnowballSizeManager snowballSize;
     Rigidbody2D myRigidbody2D;
 
-    Vector2 moveDirection;
+
 
     void Awake()
     {
-        fuelMeter = FindObjectOfType<fuel_meter>();
+        snowballSize = FindObjectOfType<SnowballSizeManager>();
         myRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
@@ -56,6 +61,7 @@ public class Helicopter : MonoBehaviour
     {
         HandleMovement();
         HandleBoundaries();
+        HandleSize();
     }
 
     // This is receiving the input values from the OnMove event that is evoked from the 
@@ -91,18 +97,23 @@ public class Helicopter : MonoBehaviour
         // move outside these boundaries.
     }
 
+    void HandleSize()
+    {
+        // Change scale of snowball according to the size meter
+        float sizePercentage = snowballSize.GetSizePercentage();
+        float scale = (maxScale - minScale) * sizePercentage + minScale;
+
+        scaleAnchor.localScale = Vector3.one * scale; 
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "fuel")
+        Contactable contactDamage = other.GetComponent<Contactable>();
+        
+        if (contactDamage != null && contactDamage.contactable)
         {
-            Fuel_canister fuelCanister = other.GetComponent<Fuel_canister>();
-            if (fuelCanister != null)
-            {
-                fuelMeter.AddFuel(fuelCanister.refillAmount);
-            }
-
-            other.gameObject.SetActive(false);
-            Destroy(other.gameObject);
+            snowballSize.AddSizePercentage(contactDamage.contactDamage);
+            contactDamage.HandleContactBehaviour();
         }
     }
 }

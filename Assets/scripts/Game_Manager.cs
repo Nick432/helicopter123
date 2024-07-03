@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class Game_Manager : MonoBehaviour
 {
+    public float globalBaseMoveSpeed = 5f;
 
-    void Start()
-    {
-        
-    }
+
 
 
 }

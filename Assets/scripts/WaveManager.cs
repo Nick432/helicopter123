@@ -19,6 +19,7 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator SpawnWavesContinuously()
     {
+        // Spawn waves indefinitely.
         while(true)
         {
             foreach (WaveSO wave in waves)
@@ -37,6 +38,7 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator SpawnWave(WaveSO wave)
     {
+        // Spawn each object in wave.
         foreach (WaveSOElement waveElement in wave.waveElements)
         {
             yield return new WaitForSeconds(waveElement.timeUntilSpawn);
@@ -56,6 +58,7 @@ public class WaveManager : MonoBehaviour
         Instantiate(waveElement.spawnablePrefab, position, Quaternion.identity);
     }
 
+    // Returns x spawn position along the bottom of the screen for the wave element object.
     float DetermineXSpawnPosition(WaveSOElement waveElement)
     {
         float objectPrefabWidth = waveElement.spawnablePrefab.transform.localScale.x;
