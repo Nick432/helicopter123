@@ -257,7 +257,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 23073860}
   m_CullTransparentMesh: 1
---- !u!1 &81232562
+--- !u!1 &84884066
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,24 +265,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 81232563}
+  - component: {fileID: 84884068}
+  - component: {fileID: 84884067}
   m_Layer: 0
-  m_Name: Enemy and Item Despawn Marker
+  m_Name: Wave Manager
   m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &81232563
+--- !u!114 &84884067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84884066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072dda2ff569a954b92171ea4f24f452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - {fileID: 11400000, guid: 9083f919f490ba34f9d5b245bfa84410, type: 2}
+  - {fileID: 11400000, guid: ce95b2481b4c8b7408e694df0682abee, type: 2}
+  spawnMarker: {fileID: 1249287927}
+--- !u!4 &84884068
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 81232562}
+  m_GameObject: {fileID: 84884066}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -9, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1289,7 +1306,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.785
+  m_Value: 0.789
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1328,7 +1345,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1760422943
 MonoBehaviour:
@@ -1401,8 +1418,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.67}
-  m_AnchoredPosition: {x: -5.000061, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1836892421
 GameObject:
@@ -1448,8 +1465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d610d294029c1df4ab8f1bdfe52b5269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topRightBoxPoint: {x: 10, y: 12}
   bottomLeftBoxPoint: {x: -10, y: -10}
-  topRightBoxPoint: {x: 10, y: 10}
 --- !u!1 &2014178704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,10 +1574,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6509b52dc0cb03845be75ea6fc8da9da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuel: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-  banana: {fileID: 9041302609149966014, guid: 11fca016e1e05dc4985351ebc6cc9804, type: 3}
-  spawn_amount: 5
-  elapsed_time: 0
 --- !u!4 &2075799495
 Transform:
   m_ObjectHideFlags: 0
@@ -1570,7 +1583,7 @@ Transform:
   m_GameObject: {fileID: 2075799493}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7426278, y: -0.6926764, z: -0.21313833}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1631,9 +1644,9 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 906808408}
   - {fileID: 2075799495}
+  - {fileID: 84884068}
   - {fileID: 954186827}
   - {fileID: 1397010790}
   - {fileID: 150668992}
   - {fileID: 1249287927}
-  - {fileID: 81232563}
   - {fileID: 1836892422}

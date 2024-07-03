@@ -54,6 +54,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.11f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\scripts\WaveSOElement.cs" />
+    <Compile Include="Assets\scripts\WaveSO.cs" />
     <Compile Include="Assets\scripts\FuelSpawning.cs" />
     <Compile Include="Assets\scripts\Helicopter.cs" />
     <Compile Include="Assets\scripts\OutOfBoundsBox.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Assets\scripts\fuel_meter.cs" />
     <Compile Include="Assets\scripts\OverlayCanvas.cs" />
     <Compile Include="Assets\scripts\Scoring.cs" />
+    <Compile Include="Assets\scripts\WaveManager.cs" />
     <Compile Include="Assets\scripts\DestroyOutOfBounds.cs" />
   </ItemGroup>
   <ItemGroup>
