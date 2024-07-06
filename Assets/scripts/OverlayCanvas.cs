@@ -15,8 +15,8 @@ public class OverlayCanvas : MonoBehaviour
         distanceScoreText.text = textToDisplay;
     }
 
-    public void DrawFuelGauge(float tankPercentage)
+    public void DrawSizeMeter(float sizePercentage)
     {
-        snowballSizeSlider.value = tankPercentage;
+        snowballSizeSlider.value = sizePercentage;
     }
 }

@@ -12,44 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97b84b519f793f4e8075b24acaf02e3, type: 3}
   m_Name: Wave 0
   m_EditorClassIdentifier: 
-  timeUntilWaveStarts: 5
+  timeUntilWaveStarts: 4
   waveElements:
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
     timeUntilSpawn: 0
+    positionAcrossScreen: 0.1
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 47fa344e4f8580e459e709a15b1c15bb, type: 3}
+    timeUntilSpawn: 0.25
+    positionAcrossScreen: 0.891
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 542ef0fc1195f2e459b8b354e121f045, type: 3}
+    timeUntilSpawn: 0.25
+    positionAcrossScreen: 0.281
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
+    timeUntilSpawn: 0.25
+    positionAcrossScreen: 0.833
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: dd70e81891e17d54c8d05827d1db3bd1, type: 3}
+    timeUntilSpawn: 0.25
     positionAcrossScreen: 0
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.265
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.534
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.756
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.575
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.635
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.836
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.39
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.906
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.906
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.906
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 0f186d00127603a42a7370df7c0cf935, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.189
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: 0f186d00127603a42a7370df7c0cf935, type: 3}
-    timeUntilSpawn: 0.25
-    positionAcrossScreen: 0.84
