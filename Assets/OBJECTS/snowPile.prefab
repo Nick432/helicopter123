@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: -7064773249743766231}
   - component: {fileID: 9094005764747126637}
   - component: {fileID: -190449863484649070}
-  - component: {fileID: -5183617583834207620}
+  - component: {fileID: 5914506122543865540}
   m_Layer: 0
-  m_Name: rock
+  m_Name: snowPile
   m_TagString: fuel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f061c262e48bd6149a73b4126736e960, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3c0cb567688480c43ac40afeb219a732, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -175,14 +175,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1036818b796907d4c972655c933896c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactDamage: 0.377
-  healInsteadOfDamage: 0
+  contactDamage: 0.25
+  healInsteadOfDamage: 1
   immunityTimeAfterContact: 0
   destroyOnContact: 1
-  crash: {fileID: 8300000, guid: 71ccd632a25bd3e40a37378342715256, type: 3}
-  sucess: {fileID: 0}
+  crash: {fileID: 0}
+  sucess: {fileID: 8300000, guid: 1730fe9ad9633d54a9fdac75c58a5405, type: 3}
   contactable: 1
---- !u!82 &-5183617583834207620
+--- !u!82 &5914506122543865540
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

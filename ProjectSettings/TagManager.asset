@@ -44,9 +44,3 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Patches
-    uniqueID: 3509431057
-    locked: 0
-  - name: Objects
-    uniqueID: 577482935
-    locked: 0
