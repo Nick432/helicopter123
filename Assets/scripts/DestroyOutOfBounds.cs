@@ -7,8 +7,8 @@ public class DestroyOutOfBounds : MonoBehaviour
     // This script can be attached to anything that will be destroyed when moving offscreen.
     // E.g. fuel cans, obstacles, projectiles.
 
-   public float minX;
-   public float maxX;
+    float minX;
+    float maxX;
     float minY;
     float maxY;
 

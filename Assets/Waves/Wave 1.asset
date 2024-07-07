@@ -14,18 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeUntilWaveStarts: 5
   waveElements:
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 542ef0fc1195f2e459b8b354e121f045, type: 3}
     timeUntilSpawn: 0
-    positionAcrossScreen: 0.5
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.05
-    positionAcrossScreen: 0.861
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.05
-    positionAcrossScreen: 0.109
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.05
-    positionAcrossScreen: 0.837
-  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
-    timeUntilSpawn: 0.05
+    positionAcrossScreen: 0.561
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 47fa344e4f8580e459e709a15b1c15bb, type: 3}
+    timeUntilSpawn: 0.5
+    positionAcrossScreen: 0.466
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 47fa344e4f8580e459e709a15b1c15bb, type: 3}
+    timeUntilSpawn: 1.5
+    positionAcrossScreen: 0.9
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 94c8facaed800da4c98a50be83be2e8f, type: 3}
+    timeUntilSpawn: 0.25
+    positionAcrossScreen: 0.045
+  - spawnablePrefab: {fileID: 7826104625733606098, guid: 967d85ebca3e12c4999b1efbf5989e76, type: 3}
+    timeUntilSpawn: 0.5
+    positionAcrossScreen: 0.579
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
+    timeUntilSpawn: 1.5
+    positionAcrossScreen: 0.86
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: dd70e81891e17d54c8d05827d1db3bd1, type: 3}
+    timeUntilSpawn: 0.75
+    positionAcrossScreen: 0.385
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 47fa344e4f8580e459e709a15b1c15bb, type: 3}
+    timeUntilSpawn: 1.5
     positionAcrossScreen: 0.393
+  - spawnablePrefab: {fileID: 7826104625733606098, guid: 99fa5e2291e08ce4d80b304a8856f98a, type: 3}
+    timeUntilSpawn: 0.25
+    positionAcrossScreen: 0.833

@@ -11,10 +11,10 @@ public class Scoring : MonoBehaviour
 
     [SerializeField] OverlayCanvas overlayCanvas;
 
-   public float gameTime;
-   public float trueDistance; // The precise distance travelled.
-   public int scoreDistance;  // The distance travelled rounded to an interval of the scoreInterval.
-    public int BestScoreDistance = 0;
+    float gameTime;
+    float trueDistance; // The precise distance travelled.
+    int scoreDistance;  // The distance travelled rounded to an interval of the scoreInterval.
+
     public static event Action<int> OnUpdatedScore;
     
     void Update()

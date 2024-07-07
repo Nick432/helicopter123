@@ -10,20 +10,4 @@ public class Game_Manager : MonoBehaviour
 
 
 
-
-
-    public void ResetGame()
-
-    {
-
-
-
-
-
-
-
-    }
-
-
 }
-
