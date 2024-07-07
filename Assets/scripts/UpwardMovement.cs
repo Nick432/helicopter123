@@ -2,14 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class UpwardMovement : MonoBehaviour
 {
-    [SerializeField] bool overwriteGlobalMoveSpeed;
-    [SerializeField] float customMoveSpeed;
-    [SerializeField] float moveSpeedVariance;
-
-    float initialMoveSpeed;
     float moveSpeed;
 
     Game_Manager gameManager;
@@ -19,24 +15,9 @@ public class UpwardMovement : MonoBehaviour
         gameManager = FindObjectOfType<Game_Manager>();
     }
 
-    void Start()
-    {
-        if (overwriteGlobalMoveSpeed)
-        {
-            initialMoveSpeed = customMoveSpeed;
-        }
-        else
-        {
-            initialMoveSpeed = gameManager.globalBaseMoveSpeed;
-        }
-
-        moveSpeed = Random.Range(initialMoveSpeed - moveSpeedVariance, 
-                                       initialMoveSpeed + moveSpeedVariance);
-    }
-
     void Update()
     {
+        moveSpeed = gameManager.globalBaseMoveSpeed;
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
     }
-
 }

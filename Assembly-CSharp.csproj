@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Assets\scripts\Snowball.cs" />
     <Compile Include="Assets\scripts\HealObjectSpawning.cs" />
-    <Compile Include="Assets\scripts\vertical_movement.cs" />
     <Compile Include="Assets\scripts\WaveSOElement.cs" />
     <Compile Include="Assets\scripts\WaveSO.cs" />
     <Compile Include="Assets\scripts\SpawnChanceElement.cs" />
@@ -65,6 +64,7 @@
     <Compile Include="Assets\scripts\OutOfBoundsBox.cs" />
     <Compile Include="Assets\scripts\Contactable.cs" />
     <Compile Include="Assets\scripts\Game_Manager.cs" />
+    <Compile Include="Assets\scripts\horizontalMovement.cs" />
     <Compile Include="Assets\scripts\OverlayCanvas.cs" />
     <Compile Include="Assets\scripts\UpwardMovement.cs" />
     <Compile Include="Assets\scripts\RollParticles.cs" />

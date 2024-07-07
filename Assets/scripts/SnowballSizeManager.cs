@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class SnowballSizeManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class SnowballSizeManager : MonoBehaviour
     bool useOverrideSizeRate;
 
     List<ApplySizeRate> applySizeRates = new List<ApplySizeRate>();
+
+    public static event Action OnGameOver;
 
     bool gameOver;
 
@@ -63,9 +66,7 @@ public class SnowballSizeManager : MonoBehaviour
             sizePercentage = 0f;
             gameOver = true;
 
-            Debug.Log("Out of snow!!!");
-
-            // Game over logic
+            OnGameOver?.Invoke();
         }
     }
     

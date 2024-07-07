@@ -23,6 +23,11 @@ public class Snowball : MonoBehaviour
     [Header("Hit")]
     [SerializeField] GameObject hitEffect;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip hitSound;
+    [SerializeField] AudioClip healSound;
+
+
     Vector2 minScreenBounds;
     Vector2 maxScreenBounds;
 
@@ -30,17 +35,21 @@ public class Snowball : MonoBehaviour
 
     SnowballSizeManager snowballSize;
     Rigidbody2D myRigidbody2D;
+    Game_Manager gameManager;
+    AudioSource audioSource;
 
-
+    bool gameOver;
 
     void Awake()
     {
         snowballSize = FindObjectOfType<SnowballSizeManager>();
         myRigidbody2D = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
     {
+        FindObjectOfType<Game_Manager>().HandleOnGameStart();
         SetScreenBoundaries();
     }
 
@@ -59,9 +68,12 @@ public class Snowball : MonoBehaviour
     // Fixed update is good for working with ridigbody (doesn't need Time.deltaTime)
     void FixedUpdate()
     {
-        HandleMovement();
         HandleBoundaries();
-        HandleSize();
+        HandleScale();
+
+        if (gameOver) return;
+
+        HandleMovement();
     }
 
     // This is receiving the input values from the OnMove event that is evoked from the 
@@ -105,7 +117,7 @@ public class Snowball : MonoBehaviour
         // move outside these boundaries.
     }
 
-    void HandleSize()
+    void HandleScale()
     {
         // Change scale of snowball according to the size meter
         float sizePercentage = snowballSize.GetSizePercentage();
@@ -123,11 +135,36 @@ public class Snowball : MonoBehaviour
             snowballSize.AddSizePercentage(contactDamage.contactDamage);
             contactDamage.HandleContactBehaviour();
 
-            if (contactDamage.contactDamage < 0f)
+            Vector2 position = transform.position;
+
+            if (contactDamage.contactDamage > 0f)
             {
-                GameObject instance = Instantiate(hitEffect, transform.position, quaternion.identity);
-                instance.gameObject.transform.parent = null;
-            }   
+                position = other.transform.position;
+                audioSource.PlayOneShot(healSound);
+            }
+            else
+            {
+                audioSource.PlayOneShot(hitSound);
+            }
+            
+            GameObject instance = Instantiate(hitEffect, position, quaternion.identity);
         }
+    }
+
+    void HandleGameOver()
+    {
+        gameOver = true;
+        GameObject instance = Instantiate(hitEffect, transform.position, quaternion.identity);
+        scaleAnchor.gameObject.SetActive(false);
+    }
+
+    void OnEnable() 
+    {
+        SnowballSizeManager.OnGameOver += HandleGameOver;
+    }
+
+    void OnDisable()
+    {
+        SnowballSizeManager.OnGameOver -= HandleGameOver;
     }
 }

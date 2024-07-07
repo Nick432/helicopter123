@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97b84b519f793f4e8075b24acaf02e3, type: 3}
   m_Name: Wave 1
   m_EditorClassIdentifier: 
-  timeUntilWaveStarts: 5
+  timeUntilWaveStarts: 3
   waveElements:
   - spawnablePrefab: {fileID: 1663437690140574226, guid: 542ef0fc1195f2e459b8b354e121f045, type: 3}
     timeUntilSpawn: 0
@@ -41,3 +41,6 @@ MonoBehaviour:
   - spawnablePrefab: {fileID: 7826104625733606098, guid: 99fa5e2291e08ce4d80b304a8856f98a, type: 3}
     timeUntilSpawn: 0.25
     positionAcrossScreen: 0.833
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: 0f186d00127603a42a7370df7c0cf935, type: 3}
+    timeUntilSpawn: 2.5
+    positionAcrossScreen: 0.24
