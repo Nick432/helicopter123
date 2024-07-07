@@ -24,8 +24,8 @@ public class Snowball : MonoBehaviour
     [SerializeField] GameObject hitEffect;
 
     [Header("Audio")]
-    [SerializeField] AudioClip hitSound;
-    [SerializeField] AudioClip healSound;
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip snowHitSound;
 
 
     Vector2 minScreenBounds;
@@ -140,11 +140,11 @@ public class Snowball : MonoBehaviour
             if (contactDamage.contactDamage > 0f)
             {
                 position = other.transform.position;
-                audioSource.PlayOneShot(healSound);
+                audioSource.PlayOneShot(snowHitSound);
             }
             else
             {
-                audioSource.PlayOneShot(hitSound);
+                audioSource.PlayOneShot(crashSound);
             }
             
             GameObject instance = Instantiate(hitEffect, position, quaternion.identity);

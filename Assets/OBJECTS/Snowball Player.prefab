@@ -5136,8 +5136,8 @@ MonoBehaviour:
   maxScale: 2
   scaleAnchor: {fileID: 2123981074158220051}
   hitEffect: {fileID: 5945693150530911177, guid: 2ac609f0e91b2f24fba2d789954753e6, type: 3}
-  hitSound: {fileID: 0}
-  healSound: {fileID: 0}
+  crashSound: {fileID: 8300000, guid: 306c053d06a0ca744b6619f9085cc3c8, type: 3}
+  snowHitSound: {fileID: 8300000, guid: 949852b83f973cf4b98c421ccab84747, type: 3}
 --- !u!114 &7907771679055125660
 MonoBehaviour:
   m_ObjectHideFlags: 0

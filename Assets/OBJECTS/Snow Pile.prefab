@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1036818b796907d4c972655c933896c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactDamage: 0.35
+  contactDamage: 0.3
   healInsteadOfDamage: 1
   immunityTimeAfterContact: 0
   destroyOnContact: 1

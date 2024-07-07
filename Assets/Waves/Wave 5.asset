@@ -62,8 +62,11 @@ MonoBehaviour:
   - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
     timeUntilSpawn: 0
     positionAcrossScreen: 0.64
+  - spawnablePrefab: {fileID: 1663437690140574226, guid: e2e32aa2dcd151c409984b3f0890c8d0, type: 3}
+    timeUntilSpawn: 0.3
+    positionAcrossScreen: 0.5
   - spawnablePrefab: {fileID: 8324173359305510285, guid: e3a85b7837d27534ca8dcc13cd95d7cf, type: 3}
-    timeUntilSpawn: 0.25
+    timeUntilSpawn: 0.1
     positionAcrossScreen: 0.5
   - spawnablePrefab: {fileID: 1663437690140574226, guid: 4802f7d01aa15ef40a1517873386e595, type: 3}
     timeUntilSpawn: 1
