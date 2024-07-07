@@ -7,8 +7,20 @@ using UnityEngine.UI;
 public class OverlayCanvas : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI distanceScoreText;
-    [SerializeField] TextMeshProUGUI BestdistanceScoreText;
+    [SerializeField] TextMeshProUGUI highScoreText;
     [SerializeField] Slider snowballSizeSlider;
+
+    Game_Manager gameManager;
+
+    void Awake()
+    {
+        gameManager = FindObjectOfType<Game_Manager>();
+    }
+
+    void Start()
+    {
+        DrawHighScore(gameManager.highScore);
+    }
 
     public void DrawDistanceScore(int distance)
     {
@@ -16,15 +28,14 @@ public class OverlayCanvas : MonoBehaviour
         distanceScoreText.text = textToDisplay;
     }
 
-
-    public void DrawBestDistanceScore(int distance)
+    public void DrawHighScore(int distance)
     {
-        string textToDisplay = distance.ToString("n0") + " m";
-        BestdistanceScoreText.text = textToDisplay;
+        string textToDisplay = "Best: " + distance.ToString("n0") + " m";
+        highScoreText.text = textToDisplay;
     }
 
-    public void DrawFuelGauge(float tankPercentage)
+    public void DrawSizeMeter(float sizePercentage)
     {
-        snowballSizeSlider.value = tankPercentage;
+        snowballSizeSlider.value = sizePercentage;
     }
 }

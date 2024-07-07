@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 5823318143624571853}
   - component: {fileID: 3696852663810792300}
   - component: {fileID: 7009015350083224501}
+  - component: {fileID: -5405759351852157378}
   m_Layer: 0
   m_Name: Snow Patch
   m_TagString: Untagged
@@ -141,7 +142,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -785536239
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 1329657772, guid: 37aa52de6d9685743aab210acf1e2893, type: 3}
   m_Color: {r: 0.8392157, g: 0.9098039, b: 0.972549, a: 1}
@@ -166,9 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7833f7d19453f94d91534f1686b00a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overwriteGlobalMoveSpeed: 0
-  customMoveSpeed: 0
-  moveSpeedVariance: 0
 --- !u!114 &7009015350083224501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,4 +179,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87981e2b48440314596307d2ecf4b5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeRateOnContact: 0.3
+  sizeRateOnContact: 0.25
+--- !u!114 &-5405759351852157378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324173359305510285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971a6bd48f07ade4fb0e1b683d107aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -100,9 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7833f7d19453f94d91534f1686b00a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overwriteGlobalMoveSpeed: 0
-  customMoveSpeed: 0
-  moveSpeedVariance: 0
 --- !u!114 &9094005764747126637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,10 +124,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1036818b796907d4c972655c933896c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactDamage: 0.377
+  contactDamage: 0.35
   healInsteadOfDamage: 0
-  immunityTimeAfterContact: 0
-  destroyOnContact: 1
+  immunityTimeAfterContact: 1
+  destroyOnContact: 0
   contactable: 1
 --- !u!1 &8474907955146962328
 GameObject:

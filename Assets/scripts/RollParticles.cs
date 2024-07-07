@@ -27,19 +27,24 @@ public class RollParticles : MonoBehaviour
 
         var mainModule = rollParticleSystem.main;
         initialParticleScale = mainModule.startSize.Evaluate(0);
+        mainModule.startSpeed = 1f;
     }
 
     void Update()
     {
         var emission = rollParticleSystem.emission;
         var mainModule = rollParticleSystem.main;
+        
+        // Ensure the particles move at the same speed as the background scrolling
+        float simulationSpeed = gameManager.globalBaseMoveSpeed;
+        mainModule.simulationSpeed = simulationSpeed;
 
         isLosingSnow = snowballSizeManager.GetCurrentSizeRate() < 0f;
 
         if (isLosingSnow)
         {
-            emission.rateOverTime = initialRateOverTime;
-            mainModule.startSpeed = gameManager.globalBaseMoveSpeed;
+            // Ensure rate over time is consistent
+            emission.rateOverTime = initialRateOverTime / simulationSpeed;
             mainModule.startSize = initialParticleScale * scaleAnchor.localScale.x;
         }
         else

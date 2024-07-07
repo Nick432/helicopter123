@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 6837966936932640183}
   - component: {fileID: 8319820765213570487}
   - component: {fileID: 3268963404200208676}
+  - component: {fileID: 7938351982916807820}
   m_Layer: 0
   m_Name: Dirt Patch Large
   m_TagString: Untagged
@@ -166,9 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7833f7d19453f94d91534f1686b00a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overwriteGlobalMoveSpeed: 0
-  customMoveSpeed: 0
-  moveSpeedVariance: 0
 --- !u!114 &3268963404200208676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,3 +180,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sizeRateOnContact: -0.2
+--- !u!114 &7938351982916807820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826104625733606098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971a6bd48f07ade4fb0e1b683d107aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

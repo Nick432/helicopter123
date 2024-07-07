@@ -12,35 +12,18 @@ public class Contactable : MonoBehaviour
     [SerializeField] float immunityTimeAfterContact = 1f;
     [SerializeField] bool destroyOnContact;
 
-
-
-    public AudioClip crash;
-    public AudioClip sucess;
-    private AudioSource audioSource;
-
-
-
-
     [HideInInspector] public bool contactable = true;
 
     void Start()
     {
-       
         if (!healInsteadOfDamage)
         {
             contactDamage *= -1f;
-            // play crash sound
-          
         }
-
-
-      
-        // play heal sound
     }
 
     public void HandleContactBehaviour()
     {
-        
         if (destroyOnContact)
         {
             Destroy(gameObject);

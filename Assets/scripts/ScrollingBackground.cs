@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class ScrollingBackground : MonoBehaviour
 {
-    float globalMoveSpeed;
+    Game_Manager gameManager;
 
     Material material;
     Vector2 offset;
 
     void Start()
     {
-        globalMoveSpeed = FindObjectOfType<Game_Manager>().globalBaseMoveSpeed;
+        gameManager = FindObjectOfType<Game_Manager>();
         material = GetComponent<SpriteRenderer>().material;   
     }
 
-    // Update is called once per frame
     void Update()
     {
-        float moveSpeed = globalMoveSpeed / 16f;
+        float moveSpeed = gameManager.globalBaseMoveSpeed / 16f;
         offset = Vector2.down * moveSpeed * Time.deltaTime;
         material.mainTextureOffset += offset;
     }

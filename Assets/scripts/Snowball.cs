@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,52 +20,60 @@ public class Snowball : MonoBehaviour
     [SerializeField] float maxScale;
     [SerializeField] Transform scaleAnchor;
 
-    public AudioClip crash;
-    public AudioClip sucess;
-    private AudioSource audioSource;
-    Vector2 minBounds;
-    Vector2 maxBounds;
+    [Header("Hit")]
+    [SerializeField] GameObject hitEffect;
+
+    [Header("Audio")]
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip snowHitSound;
+
+
+    Vector2 minScreenBounds;
+    Vector2 maxScreenBounds;
 
     Vector2 moveDirection;
 
     SnowballSizeManager snowballSize;
     Rigidbody2D myRigidbody2D;
+    Game_Manager gameManager;
+    AudioSource audioSource;
 
-
+    bool gameOver;
 
     void Awake()
     {
         snowballSize = FindObjectOfType<SnowballSizeManager>();
         myRigidbody2D = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
     {
-        SetPlayerBoundaries();
+        FindObjectOfType<Game_Manager>().HandleOnGameStart();
+        SetScreenBoundaries();
     }
 
-    void SetPlayerBoundaries()
+    void SetScreenBoundaries()
     {
         // Get camera boundaries in world units.
         Camera mainCamera = Camera.main;
         Vector2 minCameraBounds = mainCamera.ViewportToWorldPoint(new Vector2(0,0));
         Vector2 maxCameraBounds = mainCamera.ViewportToWorldPoint(new Vector2(1,1));
 
-        // The boundaries need to include half the player's size since the pivot is in the centre.
-        float halfScaleX = transform.localScale.x / 2f;
-        float halfScaleY = transform.localScale.y / 2f;
-
         // Boundaries determined by camera, size of player, and extra margins.
-        minBounds = minCameraBounds + new Vector2 (halfScaleX + leftMargin, halfScaleY + bottomMargin);
-        maxBounds = maxCameraBounds - new Vector2 (halfScaleX + rightMargin, halfScaleY + topMargin);
+        minScreenBounds = minCameraBounds + new Vector2 (leftMargin, bottomMargin);
+        maxScreenBounds = maxCameraBounds - new Vector2 (rightMargin, topMargin);
     }
 
     // Fixed update is good for working with ridigbody (doesn't need Time.deltaTime)
     void FixedUpdate()
     {
-        HandleMovement();
         HandleBoundaries();
-        HandleSize();
+        HandleScale();
+
+        if (gameOver) return;
+
+        HandleMovement();
     }
 
     // This is receiving the input values from the OnMove event that is evoked from the 
@@ -89,6 +98,14 @@ public class Snowball : MonoBehaviour
     {
         // Keep player within boundaries.
         Vector2 position = transform.position;
+
+        //The boundaries need to include half the player's size since the pivot is in the centre.
+        float halfScaleX = scaleAnchor.transform.localScale.x / 2f;
+        float halfScaleY = scaleAnchor.transform.localScale.y / 2f;
+
+        Vector2 minBounds = minScreenBounds + new Vector2 (halfScaleX, halfScaleY);
+        Vector2 maxBounds = maxScreenBounds - new Vector2 (halfScaleX, halfScaleY);
+
         Vector2 clampedPosition = new Vector2();
         clampedPosition.x = Mathf.Clamp(position.x, minBounds.x, maxBounds.x);
         clampedPosition.y = Mathf.Clamp(position.y, minBounds.y, maxBounds.y);
@@ -100,7 +117,7 @@ public class Snowball : MonoBehaviour
         // move outside these boundaries.
     }
 
-    void HandleSize()
+    void HandleScale()
     {
         // Change scale of snowball according to the size meter
         float sizePercentage = snowballSize.GetSizePercentage();
@@ -111,29 +128,43 @@ public class Snowball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
-        audioSource = GetComponent<AudioSource>();
-        Contactable contactDamage = other.GetComponent<Contactable>();
-
-
-        if(contactDamage.contactDamage  > 0)
-        {
-
-          
-            audioSource.PlayOneShot(sucess);
-        }
-        else
-        {
-            audioSource.PlayOneShot(crash);
-
-        }
+        Contactable contactDamage = other.GetComponentInParent<Contactable>();
         
         if (contactDamage != null && contactDamage.contactable)
         {
-
-
             snowballSize.AddSizePercentage(contactDamage.contactDamage);
             contactDamage.HandleContactBehaviour();
+
+            Vector2 position = transform.position;
+
+            if (contactDamage.contactDamage > 0f)
+            {
+                position = other.transform.position;
+                audioSource.PlayOneShot(snowHitSound);
+            }
+            else
+            {
+                audioSource.PlayOneShot(crashSound);
+            }
+            
+            GameObject instance = Instantiate(hitEffect, position, quaternion.identity);
         }
+    }
+
+    void HandleGameOver()
+    {
+        gameOver = true;
+        GameObject instance = Instantiate(hitEffect, transform.position, quaternion.identity);
+        scaleAnchor.gameObject.SetActive(false);
+    }
+
+    void OnEnable() 
+    {
+        SnowballSizeManager.OnGameOver += HandleGameOver;
+    }
+
+    void OnDisable()
+    {
+        SnowballSizeManager.OnGameOver -= HandleGameOver;
     }
 }
