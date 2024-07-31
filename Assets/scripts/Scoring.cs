@@ -38,7 +38,7 @@ public class Scoring : MonoBehaviour
 
     void HandleDistanceTravelled()
     {
-        float speed = gameManager.globalBaseMoveSpeed;
+        float speed = gameManager.downhillSpeed;
 
         // Store current score.
         int currentScoreDistance = scoreDistance;

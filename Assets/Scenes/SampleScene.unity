@@ -156,10 +156,10 @@ MonoBehaviour:
   distanceForDirtSnow: 1250
   distanceForNoSnow: 2250
   fadeSpeed: 1
-  sizeRateWithDeepSnow: 0.15
-  sizeRateWithThinSnow: 0.05
-  sizeRateWithDirtSnow: -0.025
-  sizeRateWithNoSnow: -0.05
+  sizeRateWithDeepSnow: 15
+  sizeRateWithThinSnow: 5
+  sizeRateWithDirtSnow: -2.5
+  sizeRateWithNoSnow: -5
   deepSnowBackgroundSprite: {fileID: 1039816273}
   thinSnowBackgroundSprite: {fileID: 2044792769}
   dirtSnowBackgroundSprite: {fileID: 465243950}
@@ -1922,35 +1922,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6509b52dc0cb03845be75ea6fc8da9da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalBaseMoveSpeedMax: 3.5
-  moveSpeedBySizeCurve:
+  topDownhillSpeed: 5
+  downhillSpeedBySizeCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 107.387505
-      outSlope: 107.387505
+      inSlope: 9.075001
+      outSlope: 9.075001
       tangentMode: 0
       weightedMode: 3
       inWeight: 0
-      outWeight: 0.004132231
+      outWeight: 0.0661157
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: -0.007414244
-      outSlope: -0.007414244
+      inSlope: 0.027880158
+      outSlope: 0.027880158
       tangentMode: 0
       weightedMode: 3
-      inWeight: 0.8429752
+      inWeight: 0.8966942
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  moveSpeedIncreasePerWave: 0.25
-  moveSpeedTransitionSpeed: 1
-  globalBaseMoveSpeed: 0
-  initialGlobalBaseMoveSpeed: 0
+  topDownhillSpeedIncreasePerWave: 0.2
+  downhillSpeedTransitionRate: 1
+  downhillSpeed: 0
+  initialDownhillSpeed: 0
   reloadDelay: 2
   highScore: 0
 --- !u!4 &2075799495

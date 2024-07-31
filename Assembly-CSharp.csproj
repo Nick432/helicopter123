@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\UpwardMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerAgility.cs" />
     <Compile Include="Assets\Scripts\RollParticles.cs" />
     <Compile Include="Assets\Scripts\Snowball.cs" />
     <Compile Include="Assets\Scripts\DestroyOutOfBounds.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Assets\Scripts\Contactable.cs" />
     <Compile Include="Assets\Scripts\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\Scoring.cs" />
+    <Compile Include="Assets\Scripts\ContactDamage.cs" />
     <Compile Include="Assets\Scripts\OutOfBoundsBox.cs" />
     <Compile Include="Assets\Scripts\Game_Manager.cs" />
     <Compile Include="Assets\Scripts\SpawnChanceElement.cs" />

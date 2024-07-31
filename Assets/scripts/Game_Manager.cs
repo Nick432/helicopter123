@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 public class Game_Manager : MonoBehaviour
 {
     [Header("Global Move Speed")]
-    public float globalBaseMoveSpeedMax = 5f;
-    [SerializeField] AnimationCurve moveSpeedBySizeCurve;
-    [SerializeField] float moveSpeedIncreasePerWave;
-    [SerializeField] float moveSpeedTransitionSpeed;
+    public float topDownhillSpeed = 5f;
+    [SerializeField] AnimationCurve downhillSpeedBySizeCurve;
+    [SerializeField] float topDownhillSpeedIncreasePerWave;
+    [SerializeField] float downhillSpeedTransitionRate;
 
-    [HideInInspector] public float globalBaseMoveSpeed;
-    [HideInInspector] public float initialGlobalBaseMoveSpeed;
+    [HideInInspector] public float downhillSpeed;
+    [HideInInspector] public float initialDownhillSpeed;
 
     [Header("Game Over")]
     [SerializeField] float reloadDelay;
@@ -24,7 +24,7 @@ public class Game_Manager : MonoBehaviour
 
     void Awake()
     {
-        initialGlobalBaseMoveSpeed = globalBaseMoveSpeedMax;
+        initialDownhillSpeed = topDownhillSpeed;
     }
 
     void Start()
@@ -35,7 +35,7 @@ public class Game_Manager : MonoBehaviour
     public void HandleOnGameStart()
     {
         snowballSizeManager = FindObjectOfType<SnowballSizeManager>();
-        globalBaseMoveSpeedMax = initialGlobalBaseMoveSpeed;
+        topDownhillSpeed = initialDownhillSpeed;
     }
 
     // Don't destroy the gameManager on load. This means certain variables are not reset when
@@ -58,14 +58,29 @@ public class Game_Manager : MonoBehaviour
 
     void Update()
     {
+        TransitionDownhillSpeedSmoothly();
+    }
+
+    void TransitionDownhillSpeedSmoothly()
+    {
         float sizePercentage = snowballSizeManager.GetSizePercentage();
-        globalBaseMoveSpeed = globalBaseMoveSpeedMax * 
-                                 moveSpeedBySizeCurve.Evaluate(sizePercentage);
+        float targetSpeed = topDownhillSpeed * downhillSpeedBySizeCurve.Evaluate(sizePercentage);
+        // If the speed is increasing, slowly transition it to that speed. (You speed up gradually)
+        if (targetSpeed > downhillSpeed)
+        {
+            float rate = downhillSpeedTransitionRate * Time.deltaTime;
+            downhillSpeed = Mathf.MoveTowards(downhillSpeed, targetSpeed, rate);
+        }
+        // Otherwise, set it straight to the lower value. (You slow down immediately)
+        else
+        {
+            downhillSpeed = targetSpeed;
+        }
     }
 
     void HandleGameOver()
     {
-        globalBaseMoveSpeedMax = 0f;
+        topDownhillSpeed = 0f;
         StartCoroutine(ReloadGame());
     }
 
@@ -76,24 +91,25 @@ public class Game_Manager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void IncreaseGlobalBaseMoveSpeed()
+    public void IncreaseTopDownhillSpeed()
     {
-        StartCoroutine(TransitionMoveSpeed());
+        topDownhillSpeed += topDownhillSpeedIncreasePerWave;
+        //StartCoroutine(TransitionMoveSpeed());
     }
 
     IEnumerator TransitionMoveSpeed()
     {
-        float currentMoveSpeed = globalBaseMoveSpeedMax;
-        float targetMoveSpeed = globalBaseMoveSpeedMax + moveSpeedIncreasePerWave;
+        float currentMoveSpeed = topDownhillSpeed;
+        float targetMoveSpeed = topDownhillSpeed + topDownhillSpeedIncreasePerWave;
         while (currentMoveSpeed < targetMoveSpeed)
         {
             currentMoveSpeed = Mathf.MoveTowards(currentMoveSpeed, targetMoveSpeed,
-                                                 moveSpeedTransitionSpeed * Time.deltaTime);
-            globalBaseMoveSpeedMax = currentMoveSpeed;
+                                                 downhillSpeedTransitionRate * Time.deltaTime);
+            topDownhillSpeed = currentMoveSpeed;
 
             yield return new WaitForEndOfFrame();
         }
-        globalBaseMoveSpeedMax = targetMoveSpeed;
+        topDownhillSpeed = targetMoveSpeed;
     }
 
     void OnEnable() 

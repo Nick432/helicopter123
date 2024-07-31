@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -7064773249743766231}
   - component: {fileID: 9094005764747126637}
   - component: {fileID: -190449863484649070}
+  - component: {fileID: -195090356061838604}
   m_Layer: 0
   m_Name: Snowman
   m_TagString: fuel
@@ -100,9 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7833f7d19453f94d91534f1686b00a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overwriteGlobalMoveSpeed: 0
-  customMoveSpeed: 0
-  moveSpeedVariance: 0
 --- !u!114 &9094005764747126637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,11 +125,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1036818b796907d4c972655c933896c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactDamage: 1
+  contactAmount: 100
   healInsteadOfDamage: 1
   immunityTimeAfterContact: 0
   destroyOnContact: 1
   contactable: 1
+--- !u!114 &-195090356061838604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663437690140574226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3951968ea97929b4ca0e06eea4a9c155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnContact:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -190449863484649070}
+        m_TargetAssemblyTypeName: ContactDamage, Assembly-CSharp
+        m_MethodName: HandleContactBehaviour
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6595844630717639152
 GameObject:
   m_ObjectHideFlags: 0

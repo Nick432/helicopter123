@@ -2,16 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 using System;
+using Unity.Mathematics;
 
 public class SnowballSizeManager : MonoBehaviour
 {
-    [SerializeField] [Range(0.01f, 1f)] float initialSize = 0.01f;
+    [Header("Size")]
+    [SerializeField] float initialSize = 1f;
+    [SerializeField] float maxSize = 100f;
+
+    [Header("Effects")]
+    [SerializeField] GameObject hitEffect;
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip snowHitSound;
 
     OverlayCanvas overlayCanvas;
+    AudioSource audioSource;
 
-    float sizePercentage;
+    float size;
 
     float currentSizeRate;
     float passiveSizeRate;
@@ -27,11 +35,12 @@ public class SnowballSizeManager : MonoBehaviour
     void Awake()
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
     {
-        sizePercentage = initialSize;
+        size = initialSize;
     }
 
     void UpdateCurrentSizeRate()
@@ -56,22 +65,25 @@ public class SnowballSizeManager : MonoBehaviour
 
     void HandleSizeChange()
     {
-        if (sizePercentage > 0f)
+        if (size > 0f)
         {
-            sizePercentage += currentSizeRate * Time.deltaTime;
-            sizePercentage = Mathf.Clamp(sizePercentage, 0f, 1f);
+            size += currentSizeRate * Time.deltaTime;
+            size = Mathf.Clamp(size, 0f, maxSize);
         }
         else
         {
-            sizePercentage = 0f;
+            size = 0f;
             gameOver = true;
 
             OnGameOver?.Invoke();
+
+            Instantiate(hitEffect, transform.position, quaternion.identity);
         }
     }
     
     void DrawSizeToUI()
     {
+        float sizePercentage = size / maxSize;
         overlayCanvas.DrawSizeMeter(sizePercentage);
     }
 
@@ -82,15 +94,26 @@ public class SnowballSizeManager : MonoBehaviour
         UpdateCurrentSizeRate();
     }
 
-    public void AddSizePercentage(float value)
+    public void OnContact(float contactAmount, GameObject otherObject)
     {
-        sizePercentage += value;
-        sizePercentage = Mathf.Clamp(sizePercentage, 0f, 1f);
+        size += contactAmount;
+        size = Mathf.Clamp(size, 0f, maxSize);
+
+        if (contactAmount > 0f)
+        {
+            audioSource.PlayOneShot(snowHitSound);
+            Instantiate(hitEffect, otherObject.transform.position, quaternion.identity);
+        }
+        else
+        {
+            audioSource.PlayOneShot(crashSound);
+            Instantiate(hitEffect, transform.position, quaternion.identity);
+        }
     }
 
     public float GetSizePercentage()
     {
-        return sizePercentage;
+        return size / maxSize;
     }
 
     public float GetCurrentSizeRate()
@@ -106,6 +129,13 @@ public class SnowballSizeManager : MonoBehaviour
         {
             applySizeRates.Add(applySizeRate);
             HandleApplySizeRates();
+        }
+
+        Contactable contactable = other.GetComponentInParent<Contactable>();
+        
+        if (contactable != null)
+        {
+            contactable.Contacted(gameObject);
         }
     }
 

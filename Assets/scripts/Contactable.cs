@@ -1,46 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Contactable : MonoBehaviour
 {
-    [Header("Contact Damage")]
-    [Range(0f, 1f)] public float contactDamage;
-    [SerializeField] bool healInsteadOfDamage;
+    public UnityEvent<GameObject> OnContact;
 
-    [Header("Behaviour")]
-    [SerializeField] float immunityTimeAfterContact = 1f;
-    [SerializeField] bool destroyOnContact;
-
-    [HideInInspector] public bool contactable = true;
-
-    void Start()
+    public void Contacted(GameObject otherObject)
     {
-        if (!healInsteadOfDamage)
-        {
-            contactDamage *= -1f;
-        }
-    }
-
-    public void HandleContactBehaviour()
-    {
-        if (destroyOnContact)
-        {
-            Destroy(gameObject);
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            contactable = false;
-
-            StartCoroutine(HandleImmunityTimer());
-        }
-    }
-
-    IEnumerator HandleImmunityTimer()
-    {
-        yield return new WaitForSeconds(immunityTimeAfterContact);
-
-        contactable = true;
+        OnContact.Invoke(otherObject);
     }
 }

@@ -36,7 +36,7 @@ public class RollParticles : MonoBehaviour
         var mainModule = rollParticleSystem.main;
         
         // Ensure the particles move at the same speed as the background scrolling
-        float simulationSpeed = gameManager.globalBaseMoveSpeed;
+        float simulationSpeed = gameManager.downhillSpeed;
         mainModule.simulationSpeed = simulationSpeed;
 
         isLosingSnow = snowballSizeManager.GetCurrentSizeRate() < 0f;

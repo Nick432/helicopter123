@@ -33,7 +33,7 @@ public class WaveManager : MonoBehaviour
 
                 yield return new WaitUntil(() => spawnWaveCoroutine == null);
 
-                gameManager.IncreaseGlobalBaseMoveSpeed();
+                gameManager.IncreaseTopDownhillSpeed();
             }
         }
         
@@ -55,8 +55,8 @@ public class WaveManager : MonoBehaviour
 
     float GetConsistentTime(float delayTime)
     {
-        float initialGlobalBaseMoveSpeed = gameManager.initialGlobalBaseMoveSpeed;
-        float currentGlobalBaseMoveSpeed = gameManager.globalBaseMoveSpeed;
+        float initialGlobalBaseMoveSpeed = gameManager.initialDownhillSpeed;
+        float currentGlobalBaseMoveSpeed = gameManager.downhillSpeed;
 
         float speedIncreaseFactor = currentGlobalBaseMoveSpeed / initialGlobalBaseMoveSpeed;
 

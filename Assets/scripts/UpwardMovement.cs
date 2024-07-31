@@ -16,7 +16,7 @@ public class UpwardMovement : MonoBehaviour
 
     void Update()
     {
-        moveSpeed = gameManager.globalBaseMoveSpeed;
+        moveSpeed = gameManager.downhillSpeed;
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
     }
 }

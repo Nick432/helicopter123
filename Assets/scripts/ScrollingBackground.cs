@@ -17,7 +17,7 @@ public class ScrollingBackground : MonoBehaviour
 
     void Update()
     {
-        float moveSpeed = gameManager.globalBaseMoveSpeed / 16f;
+        float moveSpeed = gameManager.downhillSpeed / 16f;
         offset = Vector2.down * moveSpeed * Time.deltaTime;
         material.mainTextureOffset += offset;
     }

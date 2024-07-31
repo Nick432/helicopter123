@@ -15,36 +15,25 @@ public class Snowball : MonoBehaviour
     [SerializeField] float topMargin;
     [SerializeField] float bottomMargin;
     
-    [Header("Size")]
+    [Header("Scale")]
     [SerializeField] float minScale;
     [SerializeField] float maxScale;
     [SerializeField] Transform scaleAnchor;
-
-    [Header("Hit")]
-    [SerializeField] GameObject hitEffect;
-
-    [Header("Audio")]
-    [SerializeField] AudioClip crashSound;
-    [SerializeField] AudioClip snowHitSound;
-
 
     Vector2 minScreenBounds;
     Vector2 maxScreenBounds;
 
     Vector2 moveDirection;
 
-    SnowballSizeManager snowballSize;
+    SnowballSizeManager snowballSizeManager;
     Rigidbody2D myRigidbody2D;
-    Game_Manager gameManager;
-    AudioSource audioSource;
 
     bool gameOver;
 
     void Awake()
     {
-        snowballSize = FindObjectOfType<SnowballSizeManager>();
+        snowballSizeManager = FindObjectOfType<SnowballSizeManager>();
         myRigidbody2D = GetComponent<Rigidbody2D>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -120,51 +109,25 @@ public class Snowball : MonoBehaviour
     void HandleScale()
     {
         // Change scale of snowball according to the size meter
-        float sizePercentage = snowballSize.GetSizePercentage();
+        float sizePercentage = snowballSizeManager.GetSizePercentage();
         float scale = (maxScale - minScale) * sizePercentage + minScale;
 
         scaleAnchor.localScale = Vector3.one * scale; 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Contactable contactDamage = other.GetComponentInParent<Contactable>();
-        
-        if (contactDamage != null && contactDamage.contactable)
-        {
-            snowballSize.AddSizePercentage(contactDamage.contactDamage);
-            contactDamage.HandleContactBehaviour();
-
-            Vector2 position = transform.position;
-
-            if (contactDamage.contactDamage > 0f)
-            {
-                position = other.transform.position;
-                audioSource.PlayOneShot(snowHitSound);
-            }
-            else
-            {
-                audioSource.PlayOneShot(crashSound);
-            }
-            
-            GameObject instance = Instantiate(hitEffect, position, quaternion.identity);
-        }
-    }
-
-    void HandleGameOver()
+    void OnGameOver()
     {
         gameOver = true;
-        GameObject instance = Instantiate(hitEffect, transform.position, quaternion.identity);
         scaleAnchor.gameObject.SetActive(false);
     }
 
     void OnEnable() 
     {
-        SnowballSizeManager.OnGameOver += HandleGameOver;
+        SnowballSizeManager.OnGameOver += OnGameOver;
     }
 
     void OnDisable()
     {
-        SnowballSizeManager.OnGameOver -= HandleGameOver;
+        SnowballSizeManager.OnGameOver -= OnGameOver;
     }
 }
