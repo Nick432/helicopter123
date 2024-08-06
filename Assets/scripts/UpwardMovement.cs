@@ -7,11 +7,11 @@ public class UpwardMovement : MonoBehaviour
 {
     float moveSpeed;
 
-    Game_Manager gameManager;
+    GameManager gameManager;
 
     void Awake()
     {
-        gameManager = FindObjectOfType<Game_Manager>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void Update()

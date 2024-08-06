@@ -38,7 +38,7 @@ public class Snowball : MonoBehaviour
 
     void Start()
     {
-        FindObjectOfType<Game_Manager>().HandleOnGameStart();
+        FindObjectOfType<GameManager>().HandleOnGameStart();
         SetScreenBoundaries();
     }
 
@@ -75,14 +75,6 @@ public class Snowball : MonoBehaviour
         moveDirection = moveInput;
     }
 
-    void HandleMovement()
-    {
-        // Add force to the rigidbody. This allows the movement to have some variation in speed
-        // which can be adjusted by changing the moveSpeed and rigidbody Linear Drag.
-        Vector2 moveForce = moveDirection * moveSpeed;
-        myRigidbody2D.AddForce(moveForce);
-    }
-
     void HandleBoundaries()
     {
         // Keep player within boundaries.
@@ -99,11 +91,19 @@ public class Snowball : MonoBehaviour
         clampedPosition.x = Mathf.Clamp(position.x, minBounds.x, maxBounds.x);
         clampedPosition.y = Mathf.Clamp(position.y, minBounds.y, maxBounds.y);
 
+        // If the player has hit the edge of the wall, stop its velocity along the relevant axis.
+        // This stops jittery-ness.
+        if (clampedPosition.x != position.x)
+        {
+            myRigidbody2D.velocity = new Vector2(0f, myRigidbody2D.velocity.y);
+        }
+        if (clampedPosition.y != position.y)
+        {
+            myRigidbody2D.velocity = new Vector2(myRigidbody2D.velocity.x, 0f);
+        }
+
         // Set clamped position.
         transform.position = clampedPosition;
-
-        // Note: this clamping is done after moving, so the player is able to slightly
-        // move outside these boundaries.
     }
 
     void HandleScale()
@@ -113,6 +113,14 @@ public class Snowball : MonoBehaviour
         float scale = (maxScale - minScale) * sizePercentage + minScale;
 
         scaleAnchor.localScale = Vector3.one * scale; 
+    }
+
+    void HandleMovement()
+    {
+        // Add force to the rigidbody. This allows the movement to have some variation in speed
+        // which can be adjusted by changing the moveSpeed and rigidbody Linear Drag.
+        Vector2 moveForce = moveDirection * moveSpeed;
+        myRigidbody2D.AddForce(moveForce);
     }
 
     void OnGameOver()

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ScrollingBackground : MonoBehaviour
 {
-    Game_Manager gameManager;
+    GameManager gameManager;
 
     Material material;
     Vector2 offset;
 
     void Start()
     {
-        gameManager = FindObjectOfType<Game_Manager>();
+        gameManager = FindObjectOfType<GameManager>();
         material = GetComponent<SpriteRenderer>().material;   
     }
 

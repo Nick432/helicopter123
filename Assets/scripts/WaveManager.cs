@@ -1,94 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField] List<WaveSO> waves = new List<WaveSO>();
+    [SerializeField] List<GameObject> waves = new List<GameObject>();
 
     [SerializeField] Transform spawnMarker;
 
-    Coroutine spawnWaveCoroutine;
-    Game_Manager gameManager;
+    GameManager gameManager;
+
+    float distanceTravelled;
+    float distanceToNextWave;
+
+    int waveIndex;
 
     void Start()
     {
-        gameManager = FindObjectOfType<Game_Manager>();
-        StartCoroutine(SpawnWavesContinuously());   
+        gameManager = FindObjectOfType<GameManager>();
     }
 
-    IEnumerator SpawnWavesContinuously()
+    void Update()
     {
-        // Spawn waves indefinitely.
-        while(true)
+        HandleDistanceTravelled();
+    }
+
+    void HandleDistanceTravelled()
+    {
+        float moveSpeed = gameManager.downhillSpeed;
+        distanceTravelled += moveSpeed * Time.deltaTime;
+
+        if (distanceTravelled >= distanceToNextWave)
         {
-            foreach (WaveSO wave in waves)
-            {
-                float delay = GetConsistentTime(wave.timeUntilWaveStarts);
-                yield return new WaitForSeconds(wave.timeUntilWaveStarts);
-
-                spawnWaveCoroutine = StartCoroutine(SpawnWave(wave));
-
-                yield return new WaitUntil(() => spawnWaveCoroutine == null);
-
-                gameManager.IncreaseTopDownhillSpeed();
-            }
+            distanceTravelled = 0f;
+            StartCoroutine(SpawnWave());
         }
-        
     }
 
-    IEnumerator SpawnWave(WaveSO wave)
+    IEnumerator SpawnWave()
     {
-        // Spawn each object in wave.
-        foreach (WaveSOElement waveElement in wave.waveElements)
+        GameObject wave = waves[waveIndex];
+
+        WaveGizmos wavePrefab = wave.GetComponent<WaveGizmos>();
+
+        distanceToNextWave = wavePrefab.lengthOfWave;
+
+        GameObject[] instances = new GameObject[wave.transform.childCount];
+
+        for (int i = 0; i < instances.Length; i++)
         {
-            float delay = GetConsistentTime(waveElement.timeUntilSpawn);
-            yield return new WaitForSeconds(delay);
-
-            SpawnWaveObject(waveElement);
+            instances[i] = wave.transform.GetChild(i).gameObject;
         }
 
-        spawnWaveCoroutine = null;
-    }
-
-    float GetConsistentTime(float delayTime)
-    {
-        float initialGlobalBaseMoveSpeed = gameManager.initialDownhillSpeed;
-        float currentGlobalBaseMoveSpeed = gameManager.downhillSpeed;
-
-        float speedIncreaseFactor = currentGlobalBaseMoveSpeed / initialGlobalBaseMoveSpeed;
-
-        if (speedIncreaseFactor == 0f)
+        foreach(GameObject instance in instances)
         {
-            speedIncreaseFactor = 0.01f;
+            Vector2 spawnPosition = instance.transform.localPosition + spawnMarker.position;
+            Instantiate(instance, spawnPosition, quaternion.identity);
+
+            yield return new WaitForEndOfFrame();
         }
-        return delayTime / speedIncreaseFactor;
+
+        waveIndex++;
+
+        if (waveIndex > waves.Count - 1)
+        {
+            waveIndex = 0;
+        }
     }
-
-    void SpawnWaveObject(WaveSOElement waveElement)
-    {
-        float xSpawnPosition = DetermineXSpawnPosition(waveElement);
-
-        Vector2 position = new Vector2(xSpawnPosition, spawnMarker.position.y);
-
-        Instantiate(waveElement.spawnablePrefab, position, Quaternion.identity);
-    }
-
-    // Returns x spawn position along the bottom of the screen for the wave element object.
-    float DetermineXSpawnPosition(WaveSOElement waveElement)
-    {
-        float objectPrefabWidth = waveElement.spawnablePrefab.transform.localScale.x;
-
-        float cameraWidth = Camera.main.orthographicSize * 2f * Camera.main.aspect;
-        float spawnableWidth = cameraWidth - objectPrefabWidth;
-
-        float leftmostSpawnablePosition = Camera.main.transform.position.x - spawnableWidth / 2f;
-        float percentageAlongSpawnableWidth = waveElement.positionAcrossScreen;
-        float xSpawnPosition = spawnableWidth * percentageAlongSpawnableWidth + leftmostSpawnablePosition;
-
-        return xSpawnPosition;
-    }
-
 }

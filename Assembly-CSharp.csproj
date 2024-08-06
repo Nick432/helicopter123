@@ -55,8 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\UpwardMovement.cs" />
+    <Compile Include="Assets\Scripts\LevelProgressManager.cs" />
     <Compile Include="Assets\Scripts\PlayerAgility.cs" />
     <Compile Include="Assets\Scripts\RollParticles.cs" />
+    <Compile Include="Assets\Scripts\WaveGizmos.cs" />
     <Compile Include="Assets\Scripts\Snowball.cs" />
     <Compile Include="Assets\Scripts\DestroyOutOfBounds.cs" />
     <Compile Include="Assets\Scripts\ApplySizeRate.cs" />
@@ -67,13 +69,18 @@
     <Compile Include="Assets\Scripts\HealObjectSpawning.cs" />
     <Compile Include="Assets\Scripts\SnowballSizeManager.cs" />
     <Compile Include="Assets\Scripts\Contactable.cs" />
+    <Compile Include="Assets\Scripts\GameOverCanvas.cs" />
     <Compile Include="Assets\Scripts\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\Scoring.cs" />
+    <Compile Include="Assets\Scripts\OnMouseOver.cs" />
     <Compile Include="Assets\Scripts\ContactDamage.cs" />
     <Compile Include="Assets\Scripts\OutOfBoundsBox.cs" />
-    <Compile Include="Assets\Scripts\Game_Manager.cs" />
+    <Compile Include="Assets\Scripts\BestDistanceText.cs" />
     <Compile Include="Assets\Scripts\SpawnChanceElement.cs" />
     <Compile Include="Assets\Scripts\WaveManager.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\LevelStar.cs" />
+    <Compile Include="Assets\Scripts\LoadScene.cs" />
     <Compile Include="Assets\Scripts\WaveSOElement.cs" />
   </ItemGroup>
   <ItemGroup>

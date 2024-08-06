@@ -10,7 +10,7 @@ public class RollParticles : MonoBehaviour
 
     ParticleSystem rollParticleSystem;
     SnowballSizeManager snowballSizeManager;
-    Game_Manager gameManager;
+    GameManager gameManager;
 
     bool isLosingSnow;
     float initialRateOverTime;
@@ -20,7 +20,7 @@ public class RollParticles : MonoBehaviour
     {
         rollParticleSystem = GetComponent<ParticleSystem>();
         snowballSizeManager = GetComponentInParent<SnowballSizeManager>();
-        gameManager = FindObjectOfType<Game_Manager>();
+        gameManager = FindObjectOfType<GameManager>();
 
         var emission = rollParticleSystem.emission;
         initialRateOverTime = emission.rateOverTime.Evaluate(0);

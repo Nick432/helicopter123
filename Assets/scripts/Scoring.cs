@@ -6,16 +6,17 @@ using UnityEngine.Tilemaps;
 
 public class Scoring : MonoBehaviour
 {
-    [SerializeField] int metersBySpeedFactor = 50;
+    [SerializeField] float metersBySpeedFactor = 50;
     [Tooltip("Score is calculated in intervals of this number")]
     [SerializeField] int scoreInterval = 50;
     [SerializeField] float startDistance;
+    //[SerializeField] int speedIncreaseDistanceInterval = 50;
 
     OverlayCanvas overlayCanvas;
 
-    Game_Manager gameManager;
+    GameManager gameManager;
 
-    float trueDistance; // The precise distance travelled.
+    [HideInInspector] public float trueDistance; // The precise distance travelled.
     int scoreDistance;  // The distance travelled rounded to an interval of the scoreInterval.
 
     public static event Action<int> OnUpdatedScore;
@@ -25,8 +26,14 @@ public class Scoring : MonoBehaviour
     void Awake()
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
-        gameManager = FindObjectOfType<Game_Manager>();
+        gameManager = FindObjectOfType<GameManager>();
         trueDistance = startDistance;
+    }
+
+    void Start()
+    {
+        overlayCanvas.DrawDistanceScore(scoreDistance);
+        OnUpdatedScore?.Invoke(scoreDistance);
     }
     
     void Update()
@@ -48,25 +55,28 @@ public class Scoring : MonoBehaviour
         scoreDistance = (int)(trueDistance / scoreInterval) * scoreInterval;
 
         // Draw score to UI when it changes value.
-        if (currentScoreDistance != trueDistance)
+        if (currentScoreDistance != scoreDistance)
         {
             overlayCanvas.DrawDistanceScore(scoreDistance);
             
             OnUpdatedScore?.Invoke(scoreDistance);
+
+            if (scoreDistance > gameManager.highScore)
+            {
+                gameManager.highScore = scoreDistance;
+                overlayCanvas.DrawHighScore(gameManager.highScore);
+            }
+
+            // if (scoreDistance % speedIncreaseDistanceInterval == 0)
+            // {
+            //     gameManager.IncreaseDownhillSpeed();
+            // }
         }
     }
 
     void HandleGameOver()
     {
         gameOver = true;
-
-        int highScore = gameManager.highScore;
-
-        if (scoreDistance > highScore)
-        {
-            gameManager.highScore = scoreDistance;
-            overlayCanvas.DrawHighScore(highScore);
-        }
     }
 
     void OnEnable() 

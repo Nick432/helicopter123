@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
-public class Game_Manager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    [Header("Global Move Speed")]
+    [Header("Downhill Speed")]
     public float topDownhillSpeed = 5f;
     [SerializeField] AnimationCurve downhillSpeedBySizeCurve;
-    [SerializeField] float topDownhillSpeedIncreasePerWave;
+    [SerializeField] float topSpeedIncreaseAmount;
+    [SerializeField] float topSpeedIncreaseDelay;
     [SerializeField] float downhillSpeedTransitionRate;
 
     [HideInInspector] public float downhillSpeed;
@@ -19,8 +20,14 @@ public class Game_Manager : MonoBehaviour
     [SerializeField] float reloadDelay;
 
     SnowballSizeManager snowballSizeManager;
+    GameOverCanvas gameOverCanvas;
+
+    Coroutine increaseSpeedCoroutine;
+
+    // Stored values across runs.
 
     [HideInInspector] public int highScore;
+    [HideInInspector] public bool[] starUnlockStates = new bool[3];
 
     void Awake()
     {
@@ -35,14 +42,18 @@ public class Game_Manager : MonoBehaviour
     public void HandleOnGameStart()
     {
         snowballSizeManager = FindObjectOfType<SnowballSizeManager>();
+        gameOverCanvas = FindObjectOfType<GameOverCanvas>();
+        
         topDownhillSpeed = initialDownhillSpeed;
+
+        increaseSpeedCoroutine = StartCoroutine(ContinuouslyIncreaseSpeed());
     }
 
     // Don't destroy the gameManager on load. This means certain variables are not reset when
     // the game resets.
     void ManageSingleton()
     {
-        int instanceCount = FindObjectsOfType<Game_Manager>().Length;
+        int instanceCount = FindObjectsOfType<GameManager>().Length;
 
         //If there is more than one GameManager, destroy the newest one.
         if (instanceCount > 1)
@@ -78,9 +89,25 @@ public class Game_Manager : MonoBehaviour
         }
     }
 
+    IEnumerator ContinuouslyIncreaseSpeed()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(topSpeedIncreaseDelay);
+            
+            topDownhillSpeed += topSpeedIncreaseAmount;
+        }
+    }
+
+    // public void IncreaseDownhillSpeed()
+    // {
+    //     topDownhillSpeed += topSpeedIncreaseAmount;
+    // }
+
     void HandleGameOver()
     {
         topDownhillSpeed = 0f;
+        StopCoroutine(increaseSpeedCoroutine);
         StartCoroutine(ReloadGame());
     }
 
@@ -88,19 +115,13 @@ public class Game_Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(reloadDelay);
 
-        SceneManager.LoadScene(0);
-    }
-
-    public void IncreaseTopDownhillSpeed()
-    {
-        topDownhillSpeed += topDownhillSpeedIncreasePerWave;
-        //StartCoroutine(TransitionMoveSpeed());
+        gameOverCanvas.DisplayCanvas(true);
     }
 
     IEnumerator TransitionMoveSpeed()
     {
         float currentMoveSpeed = topDownhillSpeed;
-        float targetMoveSpeed = topDownhillSpeed + topDownhillSpeedIncreasePerWave;
+        float targetMoveSpeed = topDownhillSpeed + topSpeedIncreaseAmount;
         while (currentMoveSpeed < targetMoveSpeed)
         {
             currentMoveSpeed = Mathf.MoveTowards(currentMoveSpeed, targetMoveSpeed,

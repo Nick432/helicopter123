@@ -17,6 +17,8 @@ public class ContactDamage : MonoBehaviour
 
     public void HandleContactBehaviour(GameObject otherObject)
     {
+        if (!contactable) return;
+
         SnowballSizeManager snowballSizeManager = otherObject.GetComponent<SnowballSizeManager>();
 
         if (snowballSizeManager != null)

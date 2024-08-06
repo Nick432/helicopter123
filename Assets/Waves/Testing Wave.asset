@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: Testing Wave
   m_EditorClassIdentifier: 
   timeUntilWaveStarts: 5
-  waveElements: []
+  waveElements:
+  - spawnablePrefab: {fileID: 0}
+    timeUntilSpawn: 0
+    positionAcrossScreen: 0
