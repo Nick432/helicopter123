@@ -3218,6 +3218,7 @@ GameObject:
   - component: {fileID: 1556140660}
   - component: {fileID: 1556140659}
   - component: {fileID: 1556140658}
+  - component: {fileID: 1556140661}
   m_Layer: 5
   m_Name: Visit Shop Button
   m_TagString: Untagged
@@ -3288,7 +3289,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1556140659}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1556140661}
+        m_TargetAssemblyTypeName: LoadScene, Assembly-CSharp
+        m_MethodName: LoadNewScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1556140659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3327,6 +3340,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1556140656}
   m_CullTransparentMesh: 1
+--- !u!114 &1556140661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556140656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963d066cb48dec44d8f0e676bf0d8425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scene: {fileID: 102900000, guid: 385b9007147070146a5cabf1f694042d, type: 3}
 --- !u!1 &1571441610
 GameObject:
   m_ObjectHideFlags: 0

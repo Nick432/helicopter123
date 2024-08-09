@@ -118,21 +118,6 @@ public class GameManager : MonoBehaviour
         gameOverCanvas.DisplayCanvas(true);
     }
 
-    IEnumerator TransitionMoveSpeed()
-    {
-        float currentMoveSpeed = topDownhillSpeed;
-        float targetMoveSpeed = topDownhillSpeed + topSpeedIncreaseAmount;
-        while (currentMoveSpeed < targetMoveSpeed)
-        {
-            currentMoveSpeed = Mathf.MoveTowards(currentMoveSpeed, targetMoveSpeed,
-                                                 downhillSpeedTransitionRate * Time.deltaTime);
-            topDownhillSpeed = currentMoveSpeed;
-
-            yield return new WaitForEndOfFrame();
-        }
-        topDownhillSpeed = targetMoveSpeed;
-    }
-
     void OnEnable() 
     {
         SnowballSizeManager.OnGameOver += HandleGameOver;
