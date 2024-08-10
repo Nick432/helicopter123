@@ -2,15 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting.Dependencies.NCalc;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OverlayCanvas : MonoBehaviour
 {
-    [Header("Scoring & Size Meter")]
+    [Header("Scoring")]
     [SerializeField] TextMeshProUGUI distanceScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
-    [SerializeField] Slider snowballSizeSlider;
+    [Header("Size Meter")]
+    [SerializeField] Slider mainSizeSlider;
+    [SerializeField] Slider reducedSizeSlider;
+    [SerializeField] Slider increasedSizeSlider;
+    [SerializeField] RectTransform sizeMeterLayoutGroupRect;
     [Header("Level Progress")]
     [SerializeField] Slider progressBar;
     [SerializeField] Slider bestDistanceBar;
@@ -18,10 +23,14 @@ public class OverlayCanvas : MonoBehaviour
     [SerializeField] Slider[] starSliders = new Slider[3];
 
     GameManager gameManager;
+    LayoutElement mainSizeSliderLayoutElement;
+
+    float sizeMeterWidth;
 
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+        mainSizeSliderLayoutElement = mainSizeSlider.GetComponent<LayoutElement>();
     }
 
     void Start()
@@ -41,9 +50,49 @@ public class OverlayCanvas : MonoBehaviour
         highScoreText.text = textToDisplay;
     }
 
-    public void DrawSizeMeter(float sizePercentage)
+    public void DrawSizeMeter(float sizeDifferencePercentage)
     {
-        snowballSizeSlider.value = sizePercentage;
+        float fullWidth = sizeMeterLayoutGroupRect.rect.width;
+
+        if (sizeDifferencePercentage == 1f)
+        {
+            reducedSizeSlider.gameObject.SetActive(false);
+            increasedSizeSlider.gameObject.SetActive(false);
+        }
+        else if (sizeDifferencePercentage < 1f)
+        {
+            reducedSizeSlider.gameObject.SetActive(true);
+            increasedSizeSlider.gameObject.SetActive(false);
+
+            mainSizeSliderLayoutElement.minWidth = fullWidth * sizeDifferencePercentage;
+        }
+        else
+        {
+            reducedSizeSlider.gameObject.SetActive(false);
+            increasedSizeSlider.gameObject.SetActive(true);
+
+            float widthPercentage = 1f / sizeDifferencePercentage;
+            mainSizeSliderLayoutElement.minWidth = fullWidth * widthPercentage;
+        }
+
+    }
+
+    public void DrawSnowballSize(float sizePercentage, float sizeDifferencePercentage)
+    {
+        if (sizeDifferencePercentage > 1f)
+        {
+            mainSizeSlider.value = sizePercentage * sizeDifferencePercentage;
+            if (increasedSizeSlider.enabled == true)
+            {
+                float percentage = (sizePercentage * sizeDifferencePercentage - 1f) /
+                                   (sizeDifferencePercentage - 1f);
+                increasedSizeSlider.value = percentage;
+            }
+        }
+        else
+        {
+            mainSizeSlider.value = sizePercentage;
+        }
     }
 
     public void SetLevelStarValues(float[] values)

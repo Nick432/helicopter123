@@ -9,7 +9,7 @@ public class SnowballSizeManager : MonoBehaviour
 {
     [Header("Size")]
     [SerializeField] float initialSize = 1f;
-    [SerializeField] float maxSize = 100f;
+    public float defaultMaxSize = 100f;
 
     [Header("Effects")]
     [SerializeField] GameObject hitEffect;
@@ -20,6 +20,9 @@ public class SnowballSizeManager : MonoBehaviour
     AudioSource audioSource;
 
     float size;
+    [HideInInspector] public float sizeDifferenceFromDefaultPercentage;
+
+     public float maxSize = 100f;
 
     float currentSizeRate;
     float passiveSizeRate;
@@ -41,6 +44,10 @@ public class SnowballSizeManager : MonoBehaviour
     void Start()
     {
         size = initialSize;
+
+        sizeDifferenceFromDefaultPercentage = maxSize / defaultMaxSize;
+
+        overlayCanvas.DrawSizeMeter(sizeDifferenceFromDefaultPercentage);
     }
 
     void UpdateCurrentSizeRate()
@@ -84,7 +91,7 @@ public class SnowballSizeManager : MonoBehaviour
     void DrawSizeToUI()
     {
         float sizePercentage = size / maxSize;
-        overlayCanvas.DrawSizeMeter(sizePercentage);
+        overlayCanvas.DrawSnowballSize(sizePercentage, sizeDifferenceFromDefaultPercentage);
     }
 
     // Used by background manager to change the passiveSizeRate.

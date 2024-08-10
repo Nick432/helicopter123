@@ -75,7 +75,27 @@ public class GameManager : MonoBehaviour
     void TransitionDownhillSpeedSmoothly()
     {
         float sizePercentage = snowballSizeManager.GetSizePercentage();
-        float targetSpeed = topDownhillSpeed * downhillSpeedBySizeCurve.Evaluate(sizePercentage);
+        float sizeDifferencePercentage = snowballSizeManager.sizeDifferenceFromDefaultPercentage;
+
+        float sizePercentageFromDefault = sizePercentage * sizeDifferencePercentage;
+
+        float targetSpeed = topDownhillSpeed * downhillSpeedBySizeCurve.Evaluate(sizePercentageFromDefault);
+
+        // If the player has a max size larger than default, then increase the downhill speed
+        // beyond the set number for 'topDownhillSpeed'.
+        if (sizePercentageFromDefault > 1f)
+        {
+            float x = sizePercentageFromDefault;
+            float pointToEvaluateGradient = 0.9f;
+            float rise = downhillSpeedBySizeCurve.Evaluate(1f) - 
+                         downhillSpeedBySizeCurve.Evaluate(pointToEvaluateGradient);
+            float run = 1f - pointToEvaluateGradient;
+            float gradient = rise / run;
+            
+            float excessiveSpeedFactor = gradient * x + 1f;
+            targetSpeed = topDownhillSpeed * excessiveSpeedFactor;
+        }
+
         // If the speed is increasing, slowly transition it to that speed. (You speed up gradually)
         if (targetSpeed > downhillSpeed)
         {

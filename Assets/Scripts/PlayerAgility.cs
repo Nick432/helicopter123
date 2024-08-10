@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerAgility : MonoBehaviour
 {
-    [SerializeField] float minDrag;
-    [SerializeField] float maxDrag;
+    [SerializeField] float minDrag = 4f;
+    [SerializeField] float gradient = 2f;
 
     float drag;
 
@@ -21,7 +21,10 @@ public class PlayerAgility : MonoBehaviour
     void Update()
     {
         float sizePercentage = snowballSizeManager.GetSizePercentage();
-        drag = minDrag + (maxDrag - minDrag) * sizePercentage;
+        float sizeDifferencePercentage = snowballSizeManager.sizeDifferenceFromDefaultPercentage;
+        float sizePercentageFromDefault = sizePercentage * sizeDifferencePercentage;
+
+        drag = gradient * sizePercentageFromDefault + minDrag;
         myRigidbody2D.drag = drag;
     }
 }

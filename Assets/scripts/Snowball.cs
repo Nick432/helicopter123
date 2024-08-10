@@ -28,6 +28,8 @@ public class Snowball : MonoBehaviour
     SnowballSizeManager snowballSizeManager;
     Rigidbody2D myRigidbody2D;
 
+    float sizeDifferenceFromDefaultPercentage;
+
     bool gameOver;
 
     void Awake()
@@ -39,7 +41,14 @@ public class Snowball : MonoBehaviour
     void Start()
     {
         FindObjectOfType<GameManager>().HandleOnGameStart();
+        AdjustMaxScale();
         SetScreenBoundaries();
+    }
+
+    void AdjustMaxScale()
+    {
+        sizeDifferenceFromDefaultPercentage = snowballSizeManager.maxSize / snowballSizeManager.defaultMaxSize;
+        maxScale *= sizeDifferenceFromDefaultPercentage;
     }
 
     void SetScreenBoundaries()
