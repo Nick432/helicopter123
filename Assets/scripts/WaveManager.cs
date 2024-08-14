@@ -11,7 +11,7 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField] Transform spawnMarker;
 
-    GameManager gameManager;
+    DownhillSpeedManager downhillSpeedManager;
 
     float distanceTravelled;
     float distanceToNextWave;
@@ -20,7 +20,7 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        downhillSpeedManager = FindObjectOfType<DownhillSpeedManager>();
     }
 
     void Update()
@@ -30,7 +30,7 @@ public class WaveManager : MonoBehaviour
 
     void HandleDistanceTravelled()
     {
-        float moveSpeed = gameManager.downhillSpeed;
+        float moveSpeed = downhillSpeedManager.downhillSpeed;
         distanceTravelled += moveSpeed * Time.deltaTime;
 
         if (distanceTravelled >= distanceToNextWave)

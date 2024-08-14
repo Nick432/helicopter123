@@ -15,6 +15,7 @@ public class Scoring : MonoBehaviour
     OverlayCanvas overlayCanvas;
 
     GameManager gameManager;
+    DownhillSpeedManager downhillSpeedManager;
 
     [HideInInspector] public float trueDistance; // The precise distance travelled.
     int scoreDistance;  // The distance travelled rounded to an interval of the scoreInterval.
@@ -27,6 +28,7 @@ public class Scoring : MonoBehaviour
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
         gameManager = FindObjectOfType<GameManager>();
+        downhillSpeedManager = FindObjectOfType<DownhillSpeedManager>();
         trueDistance = startDistance;
     }
 
@@ -45,7 +47,7 @@ public class Scoring : MonoBehaviour
 
     void HandleDistanceTravelled()
     {
-        float speed = gameManager.downhillSpeed;
+        float speed = downhillSpeedManager.downhillSpeed;
 
         // Store current score.
         int currentScoreDistance = scoreDistance;

@@ -22,7 +22,7 @@ public class SnowballSizeManager : MonoBehaviour
     float size;
     [HideInInspector] public float sizeDifferenceFromDefaultPercentage;
 
-     public float maxSize = 100f;
+    public float maxSize;
 
     float currentSizeRate;
     float passiveSizeRate;
@@ -33,17 +33,21 @@ public class SnowballSizeManager : MonoBehaviour
 
     public static event Action OnGameOver;
 
+    GameManager gameManager;
+
     bool gameOver;
 
     void Awake()
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
         audioSource = GetComponent<AudioSource>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void Start()
     {
         size = initialSize;
+        maxSize = gameManager.maxSize;
 
         sizeDifferenceFromDefaultPercentage = maxSize / defaultMaxSize;
 

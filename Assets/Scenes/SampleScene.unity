@@ -661,6 +661,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &165798241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165798243}
+  - component: {fileID: 165798242}
+  m_Layer: 0
+  m_Name: Downhill Speed Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &165798242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165798241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06767e24767782e4a90f420305e92c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topDownhillSpeed: 5
+  downhillSpeedBySizeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 9.163971
+      outSlope: 9.163971
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0
+      outWeight: 0.07024793
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.0072024083
+      outSlope: 0.0072024083
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.8677686
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  topSpeedIncreaseAmount: 0.2
+  topSpeedIncreaseDelay: 5
+  downhillSpeedTransitionRate: 1
+  downhillSpeed: 0
+  initialDownhillSpeed: 0
+--- !u!4 &165798243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165798241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &192629777
 GameObject:
   m_ObjectHideFlags: 0
@@ -4732,83 +4806,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &2075799493
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2075799495}
-  - component: {fileID: 2075799494}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2075799494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2075799493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6509b52dc0cb03845be75ea6fc8da9da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topDownhillSpeed: 5
-  downhillSpeedBySizeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 8.278947
-      outSlope: 8.278947
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0
-      outWeight: 0.0785124
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.0648214
-      outSlope: 0.0648214
-      tangentMode: 1
-      weightedMode: 3
-      inWeight: 0.8677686
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  topSpeedIncreaseAmount: 0.2
-  topSpeedIncreaseDelay: 10
-  downhillSpeedTransitionRate: 1
-  downhillSpeed: 0
-  initialDownhillSpeed: 0
-  reloadDelay: 2
-  highScore: 0
-  starUnlockStates: 000000
---- !u!4 &2075799495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2075799493}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4900819992564343852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4938,6 +4935,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 660bde1fe7accab49bc41909462aab8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &5541507349269329355
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2362658578541873478, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_Name
+      value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208173206625855088, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7526aeae847e5414e9614284963ecfc7, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4950,7 +5004,8 @@ SceneRoots:
   - {fileID: 1397010790}
   - {fileID: 757776326}
   - {fileID: 1858945250}
-  - {fileID: 2075799495}
+  - {fileID: 5541507349269329355}
+  - {fileID: 165798243}
   - {fileID: 1534186655}
   - {fileID: 1145181676}
   - {fileID: 433564690}

@@ -7,16 +7,16 @@ public class UpwardMovement : MonoBehaviour
 {
     float moveSpeed;
 
-    GameManager gameManager;
+    DownhillSpeedManager downhillSpeedManager;
 
     void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        downhillSpeedManager = FindObjectOfType<DownhillSpeedManager>();
     }
 
     void Update()
     {
-        moveSpeed = gameManager.downhillSpeed;
+        moveSpeed = downhillSpeedManager.downhillSpeed;
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
     }
 }

@@ -10,7 +10,7 @@ public class RollParticles : MonoBehaviour
 
     ParticleSystem rollParticleSystem;
     SnowballSizeManager snowballSizeManager;
-    GameManager gameManager;
+    DownhillSpeedManager downhillSpeedManager;
 
     bool isLosingSnow;
     float initialRateOverTime;
@@ -20,7 +20,7 @@ public class RollParticles : MonoBehaviour
     {
         rollParticleSystem = GetComponent<ParticleSystem>();
         snowballSizeManager = GetComponentInParent<SnowballSizeManager>();
-        gameManager = FindObjectOfType<GameManager>();
+        downhillSpeedManager = FindObjectOfType<DownhillSpeedManager>();
 
         var emission = rollParticleSystem.emission;
         initialRateOverTime = emission.rateOverTime.Evaluate(0);
@@ -36,7 +36,7 @@ public class RollParticles : MonoBehaviour
         var mainModule = rollParticleSystem.main;
         
         // Ensure the particles move at the same speed as the background scrolling
-        float simulationSpeed = gameManager.downhillSpeed;
+        float simulationSpeed = downhillSpeedManager.downhillSpeed;
         mainModule.simulationSpeed = simulationSpeed;
 
         isLosingSnow = snowballSizeManager.GetCurrentSizeRate() < 0f;

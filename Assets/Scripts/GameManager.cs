@@ -6,47 +6,27 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Downhill Speed")]
-    public float topDownhillSpeed = 5f;
-    [SerializeField] AnimationCurve downhillSpeedBySizeCurve;
-    [SerializeField] float topSpeedIncreaseAmount;
-    [SerializeField] float topSpeedIncreaseDelay;
-    [SerializeField] float downhillSpeedTransitionRate;
+    [SerializeField] float gameOverScreenDelay;
 
-    [HideInInspector] public float downhillSpeed;
-    [HideInInspector] public float initialDownhillSpeed;
-
-    [Header("Game Over")]
-    [SerializeField] float reloadDelay;
-
-    SnowballSizeManager snowballSizeManager;
-    GameOverCanvas gameOverCanvas;
-
-    Coroutine increaseSpeedCoroutine;
+     GameOverCanvas gameOverCanvas;
 
     // Stored values across runs.
 
     [HideInInspector] public int highScore;
     [HideInInspector] public bool[] starUnlockStates = new bool[3];
+     public float maxSize;
+     public float toughness;
 
     void Awake()
     {
-        initialDownhillSpeed = topDownhillSpeed;
-    }
-
-    void Start()
-    {
         ManageSingleton();
+
+        maxSize = 100f;
     }
 
     public void HandleOnGameStart()
     {
-        snowballSizeManager = FindObjectOfType<SnowballSizeManager>();
         gameOverCanvas = FindObjectOfType<GameOverCanvas>();
-        
-        topDownhillSpeed = initialDownhillSpeed;
-
-        increaseSpeedCoroutine = StartCoroutine(ContinuouslyIncreaseSpeed());
     }
 
     // Don't destroy the gameManager on load. This means certain variables are not reset when
@@ -67,73 +47,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        TransitionDownhillSpeedSmoothly();
-    }
-
-    void TransitionDownhillSpeedSmoothly()
-    {
-        float sizePercentage = snowballSizeManager.GetSizePercentage();
-        float sizeDifferencePercentage = snowballSizeManager.sizeDifferenceFromDefaultPercentage;
-
-        float sizePercentageFromDefault = sizePercentage * sizeDifferencePercentage;
-
-        float targetSpeed = topDownhillSpeed * downhillSpeedBySizeCurve.Evaluate(sizePercentageFromDefault);
-
-        // If the player has a max size larger than default, then increase the downhill speed
-        // beyond the set number for 'topDownhillSpeed'.
-        if (sizePercentageFromDefault > 1f)
-        {
-            float x = sizePercentageFromDefault;
-            float pointToEvaluateGradient = 0.9f;
-            float rise = downhillSpeedBySizeCurve.Evaluate(1f) - 
-                         downhillSpeedBySizeCurve.Evaluate(pointToEvaluateGradient);
-            float run = 1f - pointToEvaluateGradient;
-            float gradient = rise / run;
-            
-            float excessiveSpeedFactor = gradient * x + 1f;
-            targetSpeed = topDownhillSpeed * excessiveSpeedFactor;
-        }
-
-        // If the speed is increasing, slowly transition it to that speed. (You speed up gradually)
-        if (targetSpeed > downhillSpeed)
-        {
-            float rate = downhillSpeedTransitionRate * Time.deltaTime;
-            downhillSpeed = Mathf.MoveTowards(downhillSpeed, targetSpeed, rate);
-        }
-        // Otherwise, set it straight to the lower value. (You slow down immediately)
-        else
-        {
-            downhillSpeed = targetSpeed;
-        }
-    }
-
-    IEnumerator ContinuouslyIncreaseSpeed()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(topSpeedIncreaseDelay);
-            
-            topDownhillSpeed += topSpeedIncreaseAmount;
-        }
-    }
-
-    // public void IncreaseDownhillSpeed()
-    // {
-    //     topDownhillSpeed += topSpeedIncreaseAmount;
-    // }
-
     void HandleGameOver()
     {
-        topDownhillSpeed = 0f;
-        StopCoroutine(increaseSpeedCoroutine);
-        StartCoroutine(ReloadGame());
+        StartCoroutine(DisplayGameOverScreen());
     }
 
-    IEnumerator ReloadGame()
+    IEnumerator DisplayGameOverScreen()
     {
-        yield return new WaitForSeconds(reloadDelay);
+        yield return new WaitForSeconds(gameOverScreenDelay);
 
         gameOverCanvas.DisplayCanvas(true);
     }
