@@ -1,150 +1,193 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.SocialPlatforms.Impl;
+using System;
+using Unity.Mathematics;
 
 public class SnowballSizeManager : MonoBehaviour
 {
-    [SerializeField] [Range(0.01f, 1f)] float initialSize;
+    [Header("Size")]
+    [SerializeField] float initialSize = 1f;
+    public float defaultMaxSize = 100f;
 
-    
-    
-    [SerializeField] OverlayCanvas overlayCanvas;
+    [Header("Effects")]
+    [SerializeField] GameObject hitEffect;
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip snowHitSound;
 
-    public GameObject GameManager;
-    public GameObject BackgroundManager;  
+    OverlayCanvas overlayCanvas;
+    AudioSource audioSource;
 
-    float sizePercentage;
+    float size;
+    [HideInInspector] public float sizeDifferenceFromDefaultPercentage;
+
+    public float maxSize;
+
     float currentSizeRate;
     float passiveSizeRate;
+    float overrideSizeRate;
+    bool useOverrideSizeRate;
+
+    List<ApplySizeRate> applySizeRates = new List<ApplySizeRate>();
+
+    public static event Action OnGameOver;
+
+    GameManager gameManager;
 
     bool gameOver;
 
+    void Awake()
+    {
+        overlayCanvas = FindObjectOfType<OverlayCanvas>();
+        audioSource = GetComponent<AudioSource>();
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
     void Start()
     {
-        sizePercentage = initialSize;
-        UpdateCurrentSizeRate();
+        size = initialSize;
+        maxSize = gameManager.maxSize;
+
+        sizeDifferenceFromDefaultPercentage = maxSize / defaultMaxSize;
+
+        overlayCanvas.DrawSizeMeter(sizeDifferenceFromDefaultPercentage);
     }
 
     void UpdateCurrentSizeRate()
     {
-        currentSizeRate = passiveSizeRate;
+        if (useOverrideSizeRate)
+        {
+            currentSizeRate = overrideSizeRate;
+        }
+        else
+        {
+            currentSizeRate = passiveSizeRate;
+        }
     }
 
     void Update()
     {
-        if (gameOver)
-        {
-
-
-            var scoring = GameManager.GetComponent<Scoring>();
-            var Bm = BackgroundManager.GetComponent<BackgroundManager>();
-
-
-
-            if (scoring.scoreDistance > scoring.BestScoreDistance) {
-                scoring.BestScoreDistance = scoring.scoreDistance;
-                overlayCanvas.DrawBestDistanceScore(scoring.BestScoreDistance);
-
-                    }
-
-
-            Bm.deepSnowVisible = true;
-
-            Bm.thinSnowVisible = true;
-            Color originalAlpha1 = Bm.deepSnowBackgroundSprite.color;
-            originalAlpha1.a = 1;
-
-
-            Color originalAlpha2 = Bm.thinSnowBackgroundSprite.color;
-            originalAlpha2.a = 1;
-
-
-            Bm.deepSnowBackgroundSprite.color = originalAlpha1;
-
-            Bm.thinSnowBackgroundSprite.color = originalAlpha2;
-
-            scoring.gameTime = 0;
-            scoring.scoreDistance = 0;
-            
-
-
-            sizePercentage = initialSize;
-
-            
-           //  
-            //  SetPassiveSizeRate(sizeRateWithDeepSnow);
-              SetPassiveSizeRate(0.2f);
-            Bm.HandleBackgroundChange(scoring.scoreDistance);
-
-
-
-           
-
-            // scoring.trueDistance = 0;
-            //  sizePercentage = initialSize;
-            //  UpdateCurrentSizeRate();
-            gameOver = false;
-           
-
-        }
-
-
-
-
+        if (gameOver) return;
+        
         HandleSizeChange();
         DrawSizeToUI();
     }
 
     void HandleSizeChange()
     {
-        if (sizePercentage > 0f)
+        if (size > 0f)
         {
-            sizePercentage += currentSizeRate * Time.deltaTime;
-            sizePercentage = Mathf.Clamp(sizePercentage, 0f, 1f);
+            size += currentSizeRate * Time.deltaTime;
+            size = Mathf.Clamp(size, 0f, maxSize);
         }
         else
         {
-            sizePercentage = 0f;
+            size = 0f;
             gameOver = true;
 
-            Debug.Log("Out of snow!!!");
+            OnGameOver?.Invoke();
 
-           // ResetGame();
-
-
-
-
-
-            //reset score, set high score
-            //reset background manager
-            //reset snowball
-            // Game over logic
+            Instantiate(hitEffect, transform.position, quaternion.identity);
         }
     }
     
     void DrawSizeToUI()
     {
-        overlayCanvas.DrawFuelGauge(sizePercentage);
-    }
-
-    public void AddSizePercentage(float value)
-    {
-        sizePercentage += value;
-        sizePercentage = Mathf.Clamp(sizePercentage, 0f, 1f);
+        float sizePercentage = size / maxSize;
+        overlayCanvas.DrawSnowballSize(sizePercentage, sizeDifferenceFromDefaultPercentage);
     }
 
     // Used by background manager to change the passiveSizeRate.
-    public void SetPassiveSizeRate(float rate)
+    void SetPassiveSizeRate(float rate)
     {
         passiveSizeRate = rate;
         UpdateCurrentSizeRate();
     }
 
+    public void OnContact(float contactAmount, GameObject otherObject)
+    {
+        size += contactAmount;
+        size = Mathf.Clamp(size, 0f, maxSize);
+
+        if (contactAmount > 0f)
+        {
+            audioSource.PlayOneShot(snowHitSound);
+            Instantiate(hitEffect, otherObject.transform.position, quaternion.identity);
+        }
+        else
+        {
+            audioSource.PlayOneShot(crashSound);
+            Instantiate(hitEffect, transform.position, quaternion.identity);
+        }
+    }
+
     public float GetSizePercentage()
     {
-        return sizePercentage;
+        return size / maxSize;
+    }
+
+    public float GetCurrentSizeRate()
+    {
+        return currentSizeRate;
+    }
+
+    void OnTriggerEnter2D(Collider2D other) 
+    {
+        ApplySizeRate applySizeRate = other.GetComponentInParent<ApplySizeRate>();
+
+        if (applySizeRate != null)
+        {
+            applySizeRates.Add(applySizeRate);
+            HandleApplySizeRates();
+        }
+
+        Contactable contactable = other.GetComponentInParent<Contactable>();
+        
+        if (contactable != null)
+        {
+            contactable.Contacted(gameObject);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other) 
+    {
+        ApplySizeRate applySizeRate = other.GetComponentInParent<ApplySizeRate>();
+
+        if (applySizeRate != null)
+        {
+            applySizeRates.Remove(applySizeRate);
+            HandleApplySizeRates();
+        }
+    }
+
+    void HandleApplySizeRates()
+    {
+        if (applySizeRates.Count == 0)
+        {
+            useOverrideSizeRate = false;
+        }
+        else
+        {
+            // Prioritise using the largest rate if multiple are set simultaneously.
+            // Order list by largest sizeRateOnContact to smallest.
+            applySizeRates = applySizeRates.OrderByDescending(x => x.sizeRateOnContact).ToList();
+            // Use the largest rate.
+            overrideSizeRate = applySizeRates[0].sizeRateOnContact;
+
+            useOverrideSizeRate = true;
+        }
+        
+        UpdateCurrentSizeRate();
+    }
+
+    void OnEnable() 
+    {
+        BackgroundManager.OnSetPassiveSizeRate += SetPassiveSizeRate;
+    }
+
+    void OnDisable()
+    {
+        BackgroundManager.OnSetPassiveSizeRate -= SetPassiveSizeRate;
     }
 }

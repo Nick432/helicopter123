@@ -1,61 +1,67 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using System;
 
 public class BackgroundManager : MonoBehaviour
 {
     [Header("Changing Backgrounds")]
     [SerializeField] int distanceForThinSnow = 2000;
     [SerializeField] int distanceForDirtSnow = 4000;
+    [SerializeField] int distanceForNoSnow = 6000;
     [SerializeField] float fadeSpeed = 1f;
 
     [Header("PassiveRateOfSize")]
     [SerializeField] float sizeRateWithDeepSnow;
     [SerializeField] float sizeRateWithThinSnow;
     [SerializeField] float sizeRateWithDirtSnow;
+    [SerializeField] float sizeRateWithNoSnow;
 
     [Header("References")]
-    [SerializeField] public SpriteRenderer deepSnowBackgroundSprite;
-    [SerializeField] public SpriteRenderer thinSnowBackgroundSprite;
-    
-    [SerializeField] SnowballSizeManager snowballSizeManager;
+    [SerializeField] SpriteRenderer deepSnowBackgroundSprite;
+    [SerializeField] SpriteRenderer thinSnowBackgroundSprite;
+    [SerializeField] SpriteRenderer dirtSnowBackgroundSprite;
 
-    public bool deepSnowVisible = true;
-    public bool thinSnowVisible = true;
+    public static event Action<float> OnSetPassiveSizeRate;
+
+    bool deepSnowVisible = true;
+    bool thinSnowVisible = true;
+    bool dirtSnowVisible = true;
 
     void Start()
     {
         // Set passive rate to snowballSize script.
-        snowballSizeManager.SetPassiveSizeRate(sizeRateWithDeepSnow);
+        OnSetPassiveSizeRate?.Invoke(sizeRateWithDeepSnow);
     }
 
     // Script called when score changes. Used to change background and passiveSizeRate.
-    public void HandleBackgroundChange(int score)
+    void HandleBackgroundChange(int score)
     {
         if (deepSnowVisible && score >= distanceForThinSnow)
         {
             StartCoroutine(FadeBackground(deepSnowBackgroundSprite));
             deepSnowVisible = false;
-            snowballSizeManager.SetPassiveSizeRate(sizeRateWithThinSnow);
+            OnSetPassiveSizeRate?.Invoke(sizeRateWithThinSnow);
         }
         if (thinSnowVisible && score >= distanceForDirtSnow)
         {
             StartCoroutine(FadeBackground(thinSnowBackgroundSprite));
             thinSnowVisible = false;
-            snowballSizeManager.SetPassiveSizeRate(sizeRateWithDirtSnow);
+            OnSetPassiveSizeRate?.Invoke(sizeRateWithDirtSnow);
         }
-
-
-
-
+        if (dirtSnowVisible && score >= distanceForNoSnow)
+        {
+            StartCoroutine(FadeBackground(dirtSnowBackgroundSprite));
+            dirtSnowVisible = false;
+            OnSetPassiveSizeRate?.Invoke(sizeRateWithNoSnow);
+        }
     }
 
     IEnumerator FadeBackground(SpriteRenderer backgroundSprite)
     {
         // Shift colour until background has fully faded.
         float alpha = backgroundSprite.color.a;
-        float  originalalpha = alpha;
+
         while (alpha > 0f)
         {
             alpha = Mathf.MoveTowards(alpha, 0f, fadeSpeed * Time.deltaTime);
