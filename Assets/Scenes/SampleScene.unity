@@ -214,6 +214,8 @@ MonoBehaviour:
   waves:
   - {fileID: 8501666920287998984, guid: 00b4c0cf30d3c464eb8f247bf30c1320, type: 3}
   - {fileID: 8501666920287998984, guid: 9854c8b5261ef4e4bbb12005897a3f16, type: 3}
+  - {fileID: 8943658064176392472, guid: c6bc405ed4b48024987f34bb98597b0b, type: 3}
+  - {fileID: 2060843620564616161, guid: 5b96a2b694664c14d970fbce668c7676, type: 3}
   spawnMarker: {fileID: 1249287927}
 --- !u!4 &84884068
 Transform:
