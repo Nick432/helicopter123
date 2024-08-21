@@ -10,7 +10,6 @@ public class Scoring : MonoBehaviour
     [Tooltip("Score is calculated in intervals of this number")]
     [SerializeField] int scoreInterval = 50;
     [SerializeField] float startDistance;
-    //[SerializeField] int speedIncreaseDistanceInterval = 50;
 
     OverlayCanvas overlayCanvas;
 
@@ -24,6 +23,8 @@ public class Scoring : MonoBehaviour
 
     bool gameOver;
 
+    int coinsCollectedThisRun;
+
     void Awake()
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
@@ -35,6 +36,7 @@ public class Scoring : MonoBehaviour
     void Start()
     {
         overlayCanvas.DrawDistanceScore(scoreDistance);
+        overlayCanvas.DrawCollectedCoins(coinsCollectedThisRun);
         OnUpdatedScore?.Invoke(scoreDistance);
     }
     
@@ -68,17 +70,19 @@ public class Scoring : MonoBehaviour
                 gameManager.highScore = scoreDistance;
                 overlayCanvas.DrawHighScore(gameManager.highScore);
             }
-
-            // if (scoreDistance % speedIncreaseDistanceInterval == 0)
-            // {
-            //     gameManager.IncreaseDownhillSpeed();
-            // }
         }
     }
 
     void HandleGameOver()
     {
         gameOver = true;
+        FindObjectOfType<PlayerUpgradesManager>().money += coinsCollectedThisRun;
+    }
+
+    public void AddCoins(int amount)
+    {
+        coinsCollectedThisRun += amount;
+        overlayCanvas.DrawCollectedCoins(coinsCollectedThisRun);
     }
 
     void OnEnable() 

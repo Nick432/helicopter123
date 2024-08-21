@@ -16,10 +16,22 @@ public class SnowballSizeManager : MonoBehaviour
     [SerializeField] AudioClip crashSound;
     [SerializeField] AudioClip snowHitSound;
 
+    [Header("Resurrection")]
+    [SerializeField] Color immunityColour;
+    [SerializeField] GameObject scaleAnchor;
+
+    [Header("Damage Reduction")]
+    [SerializeField] SpriteRenderer defaultSpriteRenderer;
+    [SerializeField] SpriteRenderer icySpriteRenderer;
+
+    SpriteRenderer[] spriteRenderers;
+
+
     OverlayCanvas overlayCanvas;
     AudioSource audioSource;
+    Scoring scoring;
 
-    float size;
+    [HideInInspector] public float size;
     [HideInInspector] public float sizeDifferenceFromDefaultPercentage;
 
     public float maxSize;
@@ -32,26 +44,90 @@ public class SnowballSizeManager : MonoBehaviour
     List<ApplySizeRate> applySizeRates = new List<ApplySizeRate>();
 
     public static event Action OnGameOver;
+    public static event Action<float> OnUpdateAllMaxSize;
 
     GameManager gameManager;
 
     bool gameOver;
+    float damageReduction;
+
+    // Bonus Stats
+    [HideInInspector] public float dirtReduction;
+    [HideInInspector] public float treeReduction;
+    [HideInInspector] public float chanceForTreeCash;
+    [HideInInspector] public int treeCashAmount;
+    [HideInInspector] public float allSnowIncrease;
+    [HideInInspector] public float snowPatchAndPileReduction;
+    [HideInInspector] public bool earnMoneyFromSnowPatch;
+    [HideInInspector] public float earnDelay = 2f;
+    Coroutine earnMoneyFromSnowPatchCoroutine;
+    [HideInInspector] public bool resurrectOnDeath;
+    [HideInInspector] public float resurrectSize;
+    [HideInInspector] public float resurrectImmunityTime = 1f;
+    float resurrectDelay = 1f;
+    [HideInInspector] public bool immune;
+    [HideInInspector] public bool isSnowing;
+    [HideInInspector] public float snowingRate;
 
     void Awake()
     {
         overlayCanvas = FindObjectOfType<OverlayCanvas>();
         audioSource = GetComponent<AudioSource>();
         gameManager = FindObjectOfType<GameManager>();
+        scoring = FindObjectOfType<Scoring>();
+        maxSize = gameManager.maxSize;
     }
 
     void Start()
     {
         size = initialSize;
-        maxSize = gameManager.maxSize;
-
+        spriteRenderers = scaleAnchor.GetComponentsInChildren<SpriteRenderer>();
+        
         sizeDifferenceFromDefaultPercentage = maxSize / defaultMaxSize;
+        SetDamageReduction(gameManager.damageReduction);
 
         overlayCanvas.DrawSizeMeter(sizeDifferenceFromDefaultPercentage);
+    }
+
+    public void SetAllMaxSize(float value)
+    {
+        maxSize = value;
+        sizeDifferenceFromDefaultPercentage = maxSize / defaultMaxSize;
+        OnUpdateAllMaxSize?.Invoke(maxSize);
+    }
+
+    public void SetDamageReduction(float value)
+    {
+        damageReduction = value;
+        if (damageReduction > 0f)
+        {
+            Color newColour = icySpriteRenderer.color;
+            newColour.a = damageReduction;
+            icySpriteRenderer.color = newColour;
+        }
+        else
+        {
+            Color newColour = icySpriteRenderer.color;
+            newColour.a = 0f;
+            icySpriteRenderer.color = newColour;
+        }
+        if (damageReduction < 0f)
+        {
+            Color newColour = defaultSpriteRenderer.color;
+            newColour.a = 1f + damageReduction;
+            defaultSpriteRenderer.color = newColour;
+        }
+        else
+        {
+            Color newColour = defaultSpriteRenderer.color;
+            newColour.a = 1f;
+            defaultSpriteRenderer.color = newColour;
+        }
+    }
+
+    public float GetDamageReduction()
+    {
+        return damageReduction;
     }
 
     void UpdateCurrentSizeRate()
@@ -78,7 +154,37 @@ public class SnowballSizeManager : MonoBehaviour
     {
         if (size > 0f)
         {
-            size += currentSizeRate * Time.deltaTime;
+            float adjustedSizeRate = currentSizeRate;
+
+            if (isSnowing)
+            {
+                adjustedSizeRate += snowingRate;
+            }
+
+            adjustedSizeRate *= 1f - damageReduction / 2f;
+
+            if (adjustedSizeRate >= 0f)
+            {
+                adjustedSizeRate *= 1f + allSnowIncrease;
+                if (useOverrideSizeRate)
+                {
+                    adjustedSizeRate *= 1f - snowPatchAndPileReduction;
+                }
+            }
+            else
+            {
+                adjustedSizeRate *= 1f - dirtReduction;
+            }
+
+            if (immune)
+            {
+                if (adjustedSizeRate < 0f)
+                {
+                    adjustedSizeRate = 0f;
+                }
+            }
+            
+            size += adjustedSizeRate * Time.deltaTime;
             size = Mathf.Clamp(size, 0f, maxSize);
         }
         else
@@ -86,10 +192,57 @@ public class SnowballSizeManager : MonoBehaviour
             size = 0f;
             gameOver = true;
 
+            if (resurrectOnDeath)
+            {
+                StartCoroutine(Resurrect());
+                return;
+            }
+
+
             OnGameOver?.Invoke();
 
             Instantiate(hitEffect, transform.position, quaternion.identity);
         }
+    }
+
+    IEnumerator Resurrect()
+    {
+        Color[] originalColours = new Color[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            originalColours[i] = spriteRenderers[i].color;
+        }
+
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        scaleAnchor.SetActive(false);
+
+        yield return new WaitForSeconds(resurrectDelay);
+
+        scaleAnchor.SetActive(true);
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            Color newColour = immunityColour;
+            newColour.a = originalColours[i].a;
+            spriteRenderers[i].color = newColour;
+        }
+
+        size = maxSize * resurrectSize;
+        resurrectOnDeath = false;
+        gameOver = false;
+        Instantiate(hitEffect, transform.position, quaternion.identity);
+        immune = true;
+
+        yield return new WaitForSeconds(resurrectImmunityTime);
+
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            spriteRenderers[i].color = originalColours[i];
+        }
+
+        float bufferTime = 0.5f;
+        yield return new WaitForSeconds(bufferTime);
+
+        immune = false;
     }
     
     void DrawSizeToUI()
@@ -107,7 +260,33 @@ public class SnowballSizeManager : MonoBehaviour
 
     public void OnContact(float contactAmount, GameObject otherObject)
     {
-        size += contactAmount;
+        float adjustedContactAmount = contactAmount * (1f - damageReduction);
+
+        if (otherObject.tag == "Tree")
+        {
+            adjustedContactAmount *= 1f - treeReduction;
+            bool rewardTreeCash = UnityEngine.Random.value <= chanceForTreeCash;
+
+            if (rewardTreeCash)
+            {
+                scoring.AddCoins(treeCashAmount);
+            }
+        }
+        if (adjustedContactAmount >= 0f)
+        {
+            adjustedContactAmount *= 1f + allSnowIncrease;
+            adjustedContactAmount *= 1f - snowPatchAndPileReduction;
+        }
+
+        if (immune)
+        {
+            if (adjustedContactAmount < 0f)
+            {
+                return;
+            }
+        }
+
+        size += adjustedContactAmount;
         size = Mathf.Clamp(size, 0f, maxSize);
 
         if (contactAmount > 0f)
@@ -166,6 +345,12 @@ public class SnowballSizeManager : MonoBehaviour
         if (applySizeRates.Count == 0)
         {
             useOverrideSizeRate = false;
+
+            if (earnMoneyFromSnowPatchCoroutine != null)
+            {
+                StopCoroutine(earnMoneyFromSnowPatchCoroutine);
+                earnMoneyFromSnowPatchCoroutine = null;
+            }
         }
         else
         {
@@ -176,9 +361,29 @@ public class SnowballSizeManager : MonoBehaviour
             overrideSizeRate = applySizeRates[0].sizeRateOnContact;
 
             useOverrideSizeRate = true;
+
+            if (earnMoneyFromSnowPatch)
+            {
+                if (overrideSizeRate > 0f)
+                {
+                    if (earnMoneyFromSnowPatchCoroutine == null)
+                    {
+                        earnMoneyFromSnowPatchCoroutine = StartCoroutine(EarnMoneyFromSnowPatch());
+                    }
+                }
+            }
         }
         
         UpdateCurrentSizeRate();
+    }
+
+    IEnumerator EarnMoneyFromSnowPatch()
+    {
+        while (true)
+        {
+            scoring.AddCoins(1);
+            yield return new WaitForSeconds(earnDelay);
+        }
     }
 
     void OnEnable() 

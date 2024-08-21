@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAgility : MonoBehaviour
 {
     [SerializeField] float minDrag = 4f;
-    [SerializeField] float gradient = 2f;
+    public float gradient = 2f;
 
     float drag;
 

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Dependencies.NCalc;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,26 +7,30 @@ public class OverlayCanvas : MonoBehaviour
     [Header("Scoring")]
     [SerializeField] TextMeshProUGUI distanceScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
+    [SerializeField] TextMeshProUGUI collectedCoinsText;
     [Header("Size Meter")]
     [SerializeField] Slider mainSizeSlider;
     [SerializeField] Slider reducedSizeSlider;
-    [SerializeField] Slider increasedSizeSlider;
+    [SerializeField] Slider increasedSizeSlider1;
+    [SerializeField] Slider increasedSizeSlider2;
     [SerializeField] RectTransform sizeMeterLayoutGroupRect;
     [Header("Level Progress")]
     [SerializeField] Slider progressBar;
     [SerializeField] Slider bestDistanceBar;
     [SerializeField] Slider bestDistanceMarker;
     [SerializeField] Slider[] starSliders = new Slider[3];
+    [Header("Build Debugging")]
+    [SerializeField] TextMeshProUGUI debugText;
 
     GameManager gameManager;
     LayoutElement mainSizeSliderLayoutElement;
-
-    float sizeMeterWidth;
+    LayoutElement increaseSizeSlider1LayoutElement;
 
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         mainSizeSliderLayoutElement = mainSizeSlider.GetComponent<LayoutElement>();
+        increaseSizeSlider1LayoutElement = increasedSizeSlider1.GetComponent<LayoutElement>();
     }
 
     void Start()
@@ -53,26 +53,39 @@ public class OverlayCanvas : MonoBehaviour
     public void DrawSizeMeter(float sizeDifferencePercentage)
     {
         float fullWidth = sizeMeterLayoutGroupRect.rect.width;
+        
 
         if (sizeDifferencePercentage == 1f)
         {
             reducedSizeSlider.gameObject.SetActive(false);
-            increasedSizeSlider.gameObject.SetActive(false);
+            increasedSizeSlider1.gameObject.SetActive(false);
+            increasedSizeSlider2.gameObject.SetActive(false);
         }
         else if (sizeDifferencePercentage < 1f)
         {
             reducedSizeSlider.gameObject.SetActive(true);
-            increasedSizeSlider.gameObject.SetActive(false);
+            increasedSizeSlider1.gameObject.SetActive(false);
+            increasedSizeSlider2.gameObject.SetActive(false);
 
             mainSizeSliderLayoutElement.minWidth = fullWidth * sizeDifferencePercentage;
+        }
+        else if (sizeDifferencePercentage > 2f)
+        {
+            reducedSizeSlider.gameObject.SetActive(false);
+            increasedSizeSlider1.gameObject.SetActive(true);
+            increasedSizeSlider2.gameObject.SetActive(true);
+
+            mainSizeSliderLayoutElement.minWidth = fullWidth * 1f / sizeDifferencePercentage;
+            increaseSizeSlider1LayoutElement.minWidth = fullWidth * 1f / sizeDifferencePercentage;
         }
         else
         {
             reducedSizeSlider.gameObject.SetActive(false);
-            increasedSizeSlider.gameObject.SetActive(true);
+            increasedSizeSlider1.gameObject.SetActive(true);
+            increasedSizeSlider2.gameObject.SetActive(false);
 
-            float widthPercentage = 1f / sizeDifferencePercentage;
-            mainSizeSliderLayoutElement.minWidth = fullWidth * widthPercentage;
+            mainSizeSliderLayoutElement.minWidth = fullWidth * 1f / sizeDifferencePercentage;
+            increaseSizeSlider1LayoutElement.minWidth = 0f;
         }
 
     }
@@ -81,13 +94,14 @@ public class OverlayCanvas : MonoBehaviour
     {
         if (sizeDifferencePercentage > 1f)
         {
-            mainSizeSlider.value = sizePercentage * sizeDifferencePercentage;
-            if (increasedSizeSlider.enabled == true)
-            {
-                float percentage = (sizePercentage * sizeDifferencePercentage - 1f) /
-                                   (sizeDifferencePercentage - 1f);
-                increasedSizeSlider.value = percentage;
-            }
+            float barsFilled = sizePercentage * sizeDifferencePercentage;
+            mainSizeSlider.value = barsFilled;
+            float length1 = sizeDifferencePercentage - 1f;
+            length1 = Mathf.Clamp(length1, 0.01f, 1f);
+            increasedSizeSlider1.value = (barsFilled - 1f) / length1;
+            float length2 = sizeDifferencePercentage - 2f;
+            length2 = Mathf.Clamp(length2, 0.01f, 1f);
+            increasedSizeSlider2.value = (barsFilled - 2f) / length2;
         }
         else
         {
@@ -114,5 +128,30 @@ public class OverlayCanvas : MonoBehaviour
     {
         bestDistanceBar.value = value;
         bestDistanceMarker.value = value;
+    }
+
+    public void DrawCollectedCoins(int amount)
+    {
+        collectedCoinsText.text = amount.ToString();
+    }
+
+    public void DrawDebugInfo(string text)
+    {
+        debugText.text = text;
+    }
+
+    void OnUpdateAllMaxSize(float value)
+    {
+        DrawSizeMeter(FindObjectOfType<SnowballSizeManager>().sizeDifferenceFromDefaultPercentage);
+    }
+
+    void OnEnable()
+    {
+        SnowballSizeManager.OnUpdateAllMaxSize += OnUpdateAllMaxSize;
+    }
+
+    void OnDisable()
+    {
+        SnowballSizeManager.OnUpdateAllMaxSize -= OnUpdateAllMaxSize;
     }
 }

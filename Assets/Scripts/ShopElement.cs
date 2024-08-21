@@ -9,11 +9,13 @@ using UnityEngine.UI;
 
 public class ShopElement : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] GameObject expandedMenu;
     [SerializeField] RectTransform layoutGroupRect;
     [SerializeField] GameObject dropdownArrow;
-    // [SerializeField] GameObject player_upgrades_manager;
-    [SerializeField] public int Element_Index;
+    [SerializeField] TextMeshProUGUI nextUpgradeDescription;
+    [SerializeField] List<string> nextUpgradeDescriptions = new List<string>();
+    [SerializeField] bool ignoreNextUpgradeDescriptions;
 
     [Header("Main Button")]
     [SerializeField] Image mainButtonImage;
@@ -37,6 +39,7 @@ public class ShopElement : MonoBehaviour
 
     RectTransform rectTransform;
     PlayerUpgradesManager playerUpgradesManager;
+    ShopCanvas shopCanvas;
 
     Image purchaseButtonImage;
     Button purchaseButtonButton;
@@ -45,8 +48,8 @@ public class ShopElement : MonoBehaviour
     bool mainButtonSelected;
     bool mainButtonHighlighted;
 
-    int upgradeLevel;
-    int maxUpgradeLevel;
+    [HideInInspector] public int upgradeLevel;
+    int maxUpgradeLevel = 1;
 
     public static event Action OnExpandedMenuClicked;
     public static event Action OnUpdateShopPurchasability;
@@ -54,16 +57,9 @@ public class ShopElement : MonoBehaviour
 
     void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
         playerUpgradesManager = FindObjectOfType<PlayerUpgradesManager>();
-
-       for ( int i = 0;  i < 6; i++)
-        {
-
-            playerUpgradesManager.itemupgradelevels.Add(0);
-
-        }
-
+        rectTransform = GetComponent<RectTransform>();
+        shopCanvas = FindObjectOfType<ShopCanvas>();
 
         purchaseButtonImage = purchaseButton.GetComponent<Image>();
         purchaseButtonButton = purchaseButton.GetComponent<Button>();
@@ -71,11 +67,7 @@ public class ShopElement : MonoBehaviour
 
     void Start()
     {
-        
-        upgradeLevel = playerUpgradesManager.itemupgradelevels[Element_Index];
-
-       
-        //on start set the upgrade level to the saved number in the upgrades manager
+        playerUpgradesManager = FindObjectOfType<PlayerUpgradesManager>();
 
         collapsedHeight = rectTransform.rect.height;
         expandedHeight = expandedMenu.GetComponent<RectTransform>().rect.height;
@@ -94,11 +86,8 @@ public class ShopElement : MonoBehaviour
 
         upgradeSegmentImages = upgradeBarLayoutGroup.GetComponentsInChildren<Image>();
 
-        Debug.Log("saved over upgrade level" + upgradeLevel.ToString());
         for (int i = 0; i < upgradeLevel; i++)
         {
-            Debug.Log("changed segment sprite");
-
             upgradeSegmentImages[i].sprite = upgradedSprite;
         }
         OnUpdateShopPurchasability?.Invoke();
@@ -108,20 +97,46 @@ public class ShopElement : MonoBehaviour
 
     void UpdatePurchaseInformation()
     {
+        TextMeshProUGUI purchaseButtonText = purchaseButton.GetComponentInChildren<TextMeshProUGUI>();
         // Set cost text
+        if (upgradeLevel == maxUpgradeLevel)
+        {
+            costText.text = "";
+            purchaseButtonText.text = "MAX";
+            if (!ignoreNextUpgradeDescriptions)
+            {
+                nextUpgradeDescription.text = "";
+            }
+            purchaseButtonImage.sprite = unpurchasableSprite;
+            purchaseButtonButton.interactable = false;
+            return;
+        }
+        if (upgradeLevel > 0)
+        {
+            purchaseButtonText.text = "UPGRADE";
+            if (upgradeLevel < maxUpgradeLevel && !ignoreNextUpgradeDescriptions)
+            {
+                nextUpgradeDescription.text = nextUpgradeDescriptions[upgradeLevel - 1];
+            }
+        }
+
+        if (upgradeLevel >= maxUpgradeLevel) return;
+
         int nextUpgradeCost = upgradeCosts[upgradeLevel];
-        costText.text = nextUpgradeCost.ToString();
+        costText.text = nextUpgradeCost.ToString("n0");
 
         // Set purchase button
         if (playerUpgradesManager.money >= nextUpgradeCost)
         {
             purchaseButtonImage.sprite = purchasableSprite;
             purchaseButtonButton.interactable = true;
+            costText.color = Color.black;
         }
         else
         {
             purchaseButtonImage.sprite = unpurchasableSprite;
             purchaseButtonButton.interactable = false;
+            costText.color = Color.red;
         }
     }
 
@@ -153,7 +168,7 @@ public class ShopElement : MonoBehaviour
 
             dropdownArrow.transform.eulerAngles = new Vector3(dropdownArrow.transform.rotation.x,
                                                               dropdownArrow.transform.rotation.y,
-                                                              45f);
+                                                              -90f);
             
         }
         else
@@ -221,12 +236,9 @@ public class ShopElement : MonoBehaviour
         if (upgradeLevel == maxUpgradeLevel) return;
 
         playerUpgradesManager.money -= upgradeCosts[upgradeLevel];
+        shopCanvas.DrawMoney();
 
         upgradeLevel++;
-
-        playerUpgradesManager.save_upgrade_level(Element_Index,upgradeLevel);
-        //playerUpgradesManager.
-
 
         // Set upgrade bar sprites.
         for (int i = 0; i < upgradeLevel; i++)
@@ -238,14 +250,6 @@ public class ShopElement : MonoBehaviour
         OnUpdateShopPurchasability?.Invoke();
 
         OnNewUpgrade.Invoke(upgradeLevel);
-
-
-
-    }
-
-    public int GetUpgradeLevel()
-    {
-        return upgradeLevel;
     }
 
     void OnEnable()

@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Enhancements : MonoBehaviour
 {
+    [Header("Bar")]
     [SerializeField] float[] barValues = new float[7];
     [SerializeField] Image[] barSegments = new Image[7];
+    [Header("Bar Segment Sprites")]
     [SerializeField] Sprite lockedSprite;
     [SerializeField] Sprite unlockedSprite;
     [SerializeField] Sprite selectedSprite;
@@ -16,8 +17,9 @@ public class Enhancements : MonoBehaviour
 
     public UnityEvent OnSelectBarSegment;
 
-
+    ShopElementInfo savedInfo;
     GameManager gameManager;
+    PlayerUpgradesManager playerUpgradesManager;
     ShopElement shopElement;
 
     int selectedIndex = 3;
@@ -26,12 +28,32 @@ public class Enhancements : MonoBehaviour
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+        playerUpgradesManager = FindObjectOfType<PlayerUpgradesManager>();
         shopElement = GetComponent<ShopElement>();
-
-        upgradeLevel =  shopElement.GetUpgradeLevel();
+        
+        RetreiveSavedInfo();
+        upgradeLevel =  shopElement.upgradeLevel;
 
         SelectBarSegment(barSegments[selectedIndex]);
         HandleBarSegmentUnlockStates();
+    }
+
+    void RetreiveSavedInfo()
+    {
+        bool hasSavedData = playerUpgradesManager.shopInfo.shopElementInfos.TryGetValue(name,
+                                                                        out savedInfo);
+        if (hasSavedData)
+        {
+            selectedIndex = savedInfo.selectedSegmentIndex;
+            shopElement.upgradeLevel = savedInfo.upgradeLevel;
+
+        }
+        else
+        {
+            savedInfo = new ShopElementInfo();
+            playerUpgradesManager.shopInfo.shopElementInfos.Add(name, savedInfo);
+        }
+
     }
 
     void HandleBarSegmentUnlockStates()
@@ -125,6 +147,19 @@ public class Enhancements : MonoBehaviour
 
     public void SetToughness()
     {
-        gameManager.toughness = barValues[selectedIndex];
+        gameManager.damageReduction = barValues[selectedIndex];
+    }
+
+    void OnDisable()
+    {
+        SaveInfo();
+    }
+
+    void SaveInfo()
+    {
+        savedInfo.upgradeLevel = upgradeLevel;
+        savedInfo.selectedSegmentIndex = selectedIndex;
+
+        playerUpgradesManager.shopInfo.shopElementInfos[name] = savedInfo;
     }
 }

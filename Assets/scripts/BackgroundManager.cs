@@ -12,59 +12,83 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] float fadeSpeed = 1f;
 
     [Header("PassiveRateOfSize")]
-    [SerializeField] float sizeRateWithDeepSnow;
-    [SerializeField] float sizeRateWithThinSnow;
-    [SerializeField] float sizeRateWithDirtSnow;
-    [SerializeField] float sizeRateWithNoSnow;
+    [SerializeField] List<float> sizeRates = new List<float>();
 
     [Header("References")]
-    [SerializeField] SpriteRenderer deepSnowBackgroundSprite;
-    [SerializeField] SpriteRenderer thinSnowBackgroundSprite;
-    [SerializeField] SpriteRenderer dirtSnowBackgroundSprite;
+    public SpriteRenderer deepSnowBackgroundSprite;
+    public SpriteRenderer thinSnowBackgroundSprite;
+    public SpriteRenderer dirtSnowBackgroundSprite;
 
     public static event Action<float> OnSetPassiveSizeRate;
 
-    bool deepSnowVisible = true;
-    bool thinSnowVisible = true;
-    bool dirtSnowVisible = true;
+    [HideInInspector] public bool deepSnowVisible = true;
+    [HideInInspector] public bool thinSnowVisible = true;
+    [HideInInspector] public bool dirtSnowVisible = true;
+
+    [HideInInspector] public Coroutine fadeDeepSnowCoroutine;
+    [HideInInspector] public Coroutine fadeThinSnowCoroutine;
+    [HideInInspector] public Coroutine fadeDirtSnowCoroutine;
+
+    public bool overrideBackgrounds;
 
     void Start()
     {
         // Set passive rate to snowballSize script.
-        OnSetPassiveSizeRate?.Invoke(sizeRateWithDeepSnow);
+        OnSetPassiveSizeRate?.Invoke(sizeRates[0]);
     }
 
-    // Script called when score changes. Used to change background and passiveSizeRate.
-    void HandleBackgroundChange(int score)
+    void OnUpdatedScore(int score)
     {
         if (deepSnowVisible && score >= distanceForThinSnow)
         {
-            StartCoroutine(FadeBackground(deepSnowBackgroundSprite));
             deepSnowVisible = false;
-            OnSetPassiveSizeRate?.Invoke(sizeRateWithThinSnow);
+            if (overrideBackgrounds) return;
+            SetBackgroundFade(fadeDeepSnowCoroutine, deepSnowBackgroundSprite, 0, true);
         }
         if (thinSnowVisible && score >= distanceForDirtSnow)
         {
-            StartCoroutine(FadeBackground(thinSnowBackgroundSprite));
             thinSnowVisible = false;
-            OnSetPassiveSizeRate?.Invoke(sizeRateWithDirtSnow);
+            if (overrideBackgrounds) return;
+            SetBackgroundFade(fadeThinSnowCoroutine, thinSnowBackgroundSprite, 1, true);
         }
         if (dirtSnowVisible && score >= distanceForNoSnow)
         {
-            StartCoroutine(FadeBackground(dirtSnowBackgroundSprite));
             dirtSnowVisible = false;
-            OnSetPassiveSizeRate?.Invoke(sizeRateWithNoSnow);
+            if (overrideBackgrounds) return;
+            SetBackgroundFade(fadeDirtSnowCoroutine, dirtSnowBackgroundSprite, 2, true);
         }
     }
 
-    IEnumerator FadeBackground(SpriteRenderer backgroundSprite)
+    public void SetBackgroundFade(Coroutine coroutine, SpriteRenderer backgroundSpriteRenderer, 
+                           int backgroundIndex, bool disappearing)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+        coroutine = StartCoroutine(FadeBackground(backgroundSpriteRenderer, disappearing));
+
+        int sizeRateIndex = backgroundIndex;
+        if (disappearing)
+        {
+            sizeRateIndex = backgroundIndex + 1;
+        }
+        OnSetPassiveSizeRate?.Invoke(sizeRates[sizeRateIndex]);
+    }
+
+    IEnumerator FadeBackground(SpriteRenderer backgroundSprite, bool disappearing)
     {
         // Shift colour until background has fully faded.
         float alpha = backgroundSprite.color.a;
-
-        while (alpha > 0f)
+        float target = 1f;
+        if (disappearing)
         {
-            alpha = Mathf.MoveTowards(alpha, 0f, fadeSpeed * Time.deltaTime);
+            target = 0f;
+        }
+
+        while (alpha != target)
+        {
+            alpha = Mathf.MoveTowards(alpha, target, fadeSpeed * Time.deltaTime);
             Color newColour = backgroundSprite.color;
             newColour.a = alpha;
             backgroundSprite.color = newColour;
@@ -76,11 +100,11 @@ public class BackgroundManager : MonoBehaviour
     // Listening to event from scoring script.
     void OnEnable() 
     {
-        Scoring.OnUpdatedScore += HandleBackgroundChange;
+        Scoring.OnUpdatedScore += OnUpdatedScore;
     }
 
     void OnDisable() 
     {
-        Scoring.OnUpdatedScore -= HandleBackgroundChange;
+        Scoring.OnUpdatedScore -= OnUpdatedScore;
     }
 }

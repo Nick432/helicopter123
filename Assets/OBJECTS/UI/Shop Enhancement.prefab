@@ -311,7 +311,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 190.19998, y: -65}
-  m_SizeDelta: {x: 90, y: 65}
+  m_SizeDelta: {x: 100, y: 55}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &6942843245461866518
 CanvasRenderer:
@@ -636,6 +636,7 @@ RectTransform:
   m_Children:
   - {fileID: 6949524039799738538}
   - {fileID: 9123913331683086816}
+  - {fileID: 2048167706435009152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -666,6 +667,9 @@ MonoBehaviour:
   expandedMenu: {fileID: 2594608695187328213}
   layoutGroupRect: {fileID: 0}
   dropdownArrow: {fileID: 5858115787833331725}
+  nextUpgradeDescription: {fileID: 0}
+  nextUpgradeDescriptions: []
+  ignoreNextUpgradeDescriptions: 1
   mainButtonImage: {fileID: 51894145034186598}
   unselectedSprite: {fileID: -2052511329, guid: 05cc2743fed516e4f888e3eb261be5ff, type: 3}
   selectedSprite: {fileID: 933543451, guid: 05cc2743fed516e4f888e3eb261be5ff, type: 3}
@@ -679,6 +683,7 @@ MonoBehaviour:
   unpurchasableSprite: {fileID: -299548587, guid: 05cc2743fed516e4f888e3eb261be5ff, type: 3}
   costText: {fileID: 5144223160337841788}
   upgradeCosts: 64000000c80000002c010000
+  upgradeLevel: 0
   OnNewUpgrade:
     m_PersistentCalls:
       m_Calls:
@@ -1480,8 +1485,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1731,6 +1736,68 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &2389195538219717966
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3933531676138287093}
+    m_Modifications:
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6349596129915226577, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+      propertyPath: m_Name
+      value: ItemScript
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+--- !u!4 &2048167706435009152 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4414843765759733710, guid: 3eb4cea91c830be41b7b3497cb2be8db, type: 3}
+  m_PrefabInstance: {fileID: 2389195538219717966}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3168410945569921519
 PrefabInstance:
   m_ObjectHideFlags: 0

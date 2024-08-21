@@ -1,13 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Snowball : MonoBehaviour
 {
-    [SerializeField] float moveSpeed;
+    public float moveSpeed;
 
     [Header("Player Boundaries")]
     [SerializeField] float leftMargin;
@@ -29,8 +28,11 @@ public class Snowball : MonoBehaviour
     Rigidbody2D myRigidbody2D;
 
     float sizeDifferenceFromDefaultPercentage;
+    float defaultMaxScale;
 
     bool gameOver;
+
+    public static event Action OnGameStart;
 
     void Awake()
     {
@@ -40,7 +42,8 @@ public class Snowball : MonoBehaviour
 
     void Start()
     {
-        FindObjectOfType<GameManager>().HandleOnGameStart();
+        defaultMaxScale = maxScale;
+        OnGameStart?.Invoke();
         AdjustMaxScale();
         SetScreenBoundaries();
     }
@@ -48,7 +51,7 @@ public class Snowball : MonoBehaviour
     void AdjustMaxScale()
     {
         sizeDifferenceFromDefaultPercentage = snowballSizeManager.maxSize / snowballSizeManager.defaultMaxSize;
-        maxScale *= sizeDifferenceFromDefaultPercentage;
+        maxScale = defaultMaxScale * sizeDifferenceFromDefaultPercentage;
     }
 
     void SetScreenBoundaries()
@@ -138,13 +141,20 @@ public class Snowball : MonoBehaviour
         scaleAnchor.gameObject.SetActive(false);
     }
 
+    void OnUpdateAllMaxSize(float value)
+    {
+        AdjustMaxScale();
+    }
+
     void OnEnable() 
     {
         SnowballSizeManager.OnGameOver += OnGameOver;
+        SnowballSizeManager.OnUpdateAllMaxSize += OnUpdateAllMaxSize;
     }
 
     void OnDisable()
     {
         SnowballSizeManager.OnGameOver -= OnGameOver;
+        SnowballSizeManager.OnUpdateAllMaxSize -= OnUpdateAllMaxSize;
     }
 }

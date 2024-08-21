@@ -8,6 +8,7 @@ public class BestDistanceText : MonoBehaviour
     [SerializeField] RectTransform target;
     [SerializeField] float leftPadding;
     [SerializeField] float rightPadding;
+    [SerializeField] float xMaxAnchor = 0.7f;
 
     float minX;
     float maxX;
@@ -25,7 +26,7 @@ public class BestDistanceText : MonoBehaviour
         Vector2 maxBounds = Camera.main.ViewportToScreenPoint(Vector2.one);
         
         minX = minBounds.x + leftPadding;
-        maxX = maxBounds.x - rightPadding;
+        maxX = maxBounds.x * xMaxAnchor - rightPadding;
     }
 
     void Update()

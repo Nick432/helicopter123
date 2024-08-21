@@ -14,17 +14,15 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public int highScore;
     [HideInInspector] public bool[] starUnlockStates = new bool[3];
-     public float maxSize;
-     public float toughness;
+     public float maxSize = 100f;
+     public float damageReduction;
 
     void Awake()
     {
         ManageSingleton();
-
-        maxSize = 100f;
     }
 
-    public void HandleOnGameStart()
+    void HandleOnGameStart()
     {
         gameOverCanvas = FindObjectOfType<GameOverCanvas>();
     }
@@ -62,11 +60,13 @@ public class GameManager : MonoBehaviour
     void OnEnable() 
     {
         SnowballSizeManager.OnGameOver += HandleGameOver;
+        Snowball.OnGameStart += HandleOnGameStart;
     }
 
     void OnDisable()
     {
         SnowballSizeManager.OnGameOver -= HandleGameOver;
+        Snowball.OnGameStart -= HandleOnGameStart;
     }
 
 }

@@ -7,6 +7,7 @@ TagManager:
   - item
   - obstacle
   - fuel
+  - Tree
   layers:
   - Default
   - TransparentFX

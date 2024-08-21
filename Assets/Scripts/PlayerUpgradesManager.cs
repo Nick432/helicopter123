@@ -5,31 +5,10 @@ using UnityEngine;
 
 public class PlayerUpgradesManager : MonoBehaviour
 {
-    public int money;
+    public Transform itemScriptsGroup;
+    public Transform abilityScriptsGroup;
     
+    public ShopInfo shopInfo;
 
-   public  List<int> itemupgradelevels = new List<int>();
-
-
-
-
-
-
-
-
-    public void save_upgrade_level(int index,int level)
-    {
-
-
-
-        itemupgradelevels[index] = level;
-
-
-
-
-
-
-
-    }
-
+    public int money;
 }
